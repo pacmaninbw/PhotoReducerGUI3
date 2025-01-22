@@ -25,10 +25,10 @@ public slots:
 signals:
 
 private slots:
-    void on_optionsPushButtonClicked();
-
+    void on_optionsPushButton_Clicked();
 
 private:
+    QLCDNumber* createAndConfigureLCD(const char* lcdName);
     QWidget *centralwidget;
     QLCDNumber *filesToResizeLcdNumber;
     QLabel *filesToResizeLabel;
