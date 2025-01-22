@@ -30,6 +30,7 @@ private slots:
 private:
     void setUpFileGroupBox();
     void setUpPhotoOptionGroupBox();
+    QCheckBox* createAndInit(const QString &boxText, const char* objectName);
     QGroupBox *fileAndDirectoryGroupBox;
     QFormLayout *fileAndDirectorylayout;
     QCheckBox *JPGFileTypeCheckBox;

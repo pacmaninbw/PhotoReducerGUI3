@@ -31,12 +31,21 @@ void OptionsDialog::setUpPhotoOptionGroupBox()
 {
 }
 
+QCheckBox *OptionsDialog::createAndInit(const QString &boxText, const char* newObjectName)
+{
+    QCheckBox* newCheckBox = new QCheckBox(boxText, this);
+    newCheckBox->setObjectName(QString::fromUtf8(newObjectName));
+
+    return newCheckBox;
+}
+
 void OptionsDialog::setUpFileGroupBox()
 {
-    JPGFileTypeCheckBox = new QCheckBox("JPG files", this);
-    PNGFileTypecheckBox = new QCheckBox("PNG Files", this);
-    fixFileNameCheckBox = new QCheckBox("Safe Web Name", this);
-    overwriteCheckBox = new QCheckBox("Overwrite Existing Files", this);
+    JPGFileTypeCheckBox = createAndInit("JPG files", "JPGFileTypeCheckBox");
+    PNGFileTypecheckBox = createAndInit("PNG Files", "PNGFileTypecheckBox");
+    fixFileNameCheckBox = createAndInit("Safe Web Name", "fixFileNameCheckBox");
+    overwriteCheckBox = createAndInit("Overwrite Existing Files", "overwriteCheckBox");
+    
     sourceDirectoryLineEdit = new QLineEdit(this);
     sourceDirBrowsePushButton = new QPushButton("Browse Source Directory", this);
 //    QHBoxLayout *srcDirLayout = new QHBoxLayout(this);
