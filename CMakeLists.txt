@@ -20,6 +20,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         PhotoCounter.h
+        OptionsDialog.cpp 
+        OptionsDialog.h 
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
