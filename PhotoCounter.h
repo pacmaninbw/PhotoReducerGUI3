@@ -1,5 +1,5 @@
-#ifndef PHOTOCOUNTER_H
-#define PHOTOCOUNTER_H
+#ifndef PHOTOCOUNTER_H_
+#define PHOTOCOUNTER_H_
 
 #include <QObject>
 
@@ -37,4 +37,4 @@ private:
     std::size_t m_value;
 };
 
-#endif
+#endif	// PHOTOCOUNTER_H_
