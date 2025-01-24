@@ -30,6 +30,7 @@ signals:
 
 private slots:
     void on_optionsPushButton_Clicked();
+    void on_resizePhotosButton_Clicked();
 
 private:
 /*

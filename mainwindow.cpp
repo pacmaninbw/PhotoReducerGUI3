@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     setUpUI();
 
     connect(optionsPushButton, &QPushButton::clicked, this, &MainWindow::on_optionsPushButton_Clicked);
+    connect(resizePhotosButton, &QPushButton::clicked, this, &MainWindow::on_resizePhotosButton_Clicked);
 }
 
 MainWindow::~MainWindow()
@@ -45,6 +46,10 @@ void MainWindow::on_optionsPushButton_Clicked()
     if (optionDialog.exec() == QDialog::Accepted)
     {
     }
+}
+
+void MainWindow::on_resizePhotosButton_Clicked()
+{
 }
 
 /*
