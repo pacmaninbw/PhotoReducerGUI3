@@ -21,7 +21,9 @@ set(PROJECT_SOURCES
         mainwindow.h
         PhotoCounter.h
         OptionsDialog.cpp 
-        OptionsDialog.h 
+        OptionsDialog.h
+	PhotoReducerModel.h
+	PhotoReducerModel.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
