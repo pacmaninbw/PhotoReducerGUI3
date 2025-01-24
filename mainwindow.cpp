@@ -1,6 +1,6 @@
-#include <QDir>
 #include "mainwindow.h"
 #include "OptionsDialog.h"
+#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,6 +13,22 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete filesToResizeLabel;
+    delete filesToResizeLcdNumber;
+    delete resizedPhotosLabel;
+    delete resizedPhotosLcdNumber;
+    delete sourceDirectoryLabel;
+    delete resizeProgressBar;
+    delete sourceDirectoryValueLabel;
+    delete targetDirectoryLabel;
+    delete targetDirectoryValueLabel;
+    delete optionsPushButton;
+    delete resizePhotosButton;
+    delete resizePhotosVBoxLayout;
+    delete filesToResizeVBoxLayout;
+    delete photoCountHBoxLayout;
+    delete mwLayout;
+    delete centralwidget;
 }
 
 /*
@@ -36,53 +52,92 @@ void MainWindow::on_optionsPushButton_Clicked()
  */
 void MainWindow::setUpUI()
 {
-    resize(mainWindowWidth, mainWindowHeight);
 
     centralwidget = new QWidget(this);
     centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+    mwLayout = new QVBoxLayout(centralwidget);
 
-    optionsPushButton = new QPushButton("Options", centralwidget);
-    optionsPushButton->setObjectName("optionsPushButton");
-    optionsPushButton->setGeometry(calculateHorizontalCenteredObjectRect(optionsPushButton->width(), buttonHeight));
-    currentHeight += buttonHeight + verticleSpace;
+    optionsPushButton = CreateNamedButton("Options", "optionsPushButton");
+    mwLayout->addWidget(optionsPushButton, 0, Qt::AlignHCenter);
+
+    setUpProgressDisplays();
 
     setUpDirectoryDisplays();
+
+    resizePhotosButton = CreateNamedButton("Resize Photos", "resizePhotosButton");
+    resizePhotosButton->setDisabled(true);
+    mwLayout->addWidget(resizePhotosButton, 0, Qt::AlignHCenter);
+
+    resize(mainWindowWidth, mainWindowHeight);
 
     setCentralWidget(centralwidget);
 }
 
 void MainWindow::setUpDirectoryDisplays()
 {
-    sourceDirectoryLabel = createCenteredLabel("Source Directory", "sourceDirectoryLabel");
-    sourceDirectoryValueLabel = createDirectoryDisplayLab("sourceDirectoryValueLabel");
+    sourceDirectoryLabel = createNamedLabel("Source Directory", "sourceDirectoryLabel");
+    mwLayout->addWidget(sourceDirectoryLabel, 0, Qt::AlignHCenter);
 
-    targetDirectoryLabel = createCenteredLabel("Target Directory", "targetDirectoryLabel");
+    sourceDirectoryValueLabel = createDirectoryDisplayLab("sourceDirectoryValueLabel");
+    mwLayout->addWidget(sourceDirectoryValueLabel, 0, Qt::AlignHCenter);
+
+    targetDirectoryLabel = createNamedLabel("Target Directory", "targetDirectoryLabel");
+    mwLayout->addWidget(targetDirectoryLabel, 0, Qt::AlignHCenter);
+
     targetDirectoryValueLabel = createDirectoryDisplayLab("targetDirectoryValueLabel");
+    mwLayout->addWidget(targetDirectoryValueLabel, 0, Qt::AlignHCenter);
 }
 
-QLCDNumber *MainWindow::createAndConfigureLCD(const char *lcdName)
+void MainWindow::setUpProgressDisplays()
+{
+    resizeProgressBar = new QProgressBar(centralwidget);
+    resizeProgressBar->setRange(0, 200);
+    resizeProgressBar->setValue(100);
+    resizeProgressBar->setGeometry(0, 0, 500, 50);
+    resizeProgressBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    
+    mwLayout->addWidget(resizeProgressBar, 0, Qt::AlignHCenter);
+
+    photoCountHBoxLayout = new QHBoxLayout;
+    mwLayout->addLayout(photoCountHBoxLayout, 0);
+
+    filesToResizeVBoxLayout = new QVBoxLayout;
+    photoCountHBoxLayout->addLayout(filesToResizeVBoxLayout, 0);
+
+    resizePhotosVBoxLayout = new QVBoxLayout;
+    photoCountHBoxLayout->addLayout(resizePhotosVBoxLayout, 0);
+
+    filesToResizeLabel = createNamedLabel("Photos to Resize", "filesToResizeLabel");
+    filesToResizeVBoxLayout->addWidget(filesToResizeLabel, 0, Qt::AlignHCenter);
+
+    filesToResizeLcdNumber = createAndConfigureLCD("filesToResizeLcdNumber", 200);
+    filesToResizeVBoxLayout->addWidget(filesToResizeLcdNumber, 0, Qt::AlignHCenter);
+
+    resizedPhotosLabel = createNamedLabel("Resized Photos","resizedPhotosLabel");
+    resizePhotosVBoxLayout->addWidget(resizedPhotosLabel, 0, Qt::AlignHCenter);
+
+    resizedPhotosLcdNumber = createAndConfigureLCD("resizedPhotosLcdNumber", 100);
+    resizePhotosVBoxLayout->addWidget(resizedPhotosLcdNumber, 0, Qt::AlignHCenter);
+}
+
+QLCDNumber *MainWindow::createAndConfigureLCD(const char *lcdName, const int initValue)
 {
     QLCDNumber* lcd = new QLCDNumber;
 
     lcd->setObjectName(QString::fromUtf8(lcdName));
 
     QPalette palette = lcd->palette();
-    palette.setColor(QPalette::Window, Qt::black); // Set background color to black
-    palette.setColor(QPalette::WindowText, Qt::green); // Set text color to green
+    palette.setColor(QPalette::Window, Qt::black);
+    palette.setColor(QPalette::WindowText, Qt::green);
     lcd->setAutoFillBackground(true);
     lcd->setPalette(palette);
     lcd->setSegmentStyle(QLCDNumber::Flat);
+    lcd->setDigitCount(lcdDigitCount);
+    lcd->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    lcd->setGeometry(0, 0, 200, lcdHeight);
+    lcd->display(initValue);
 
     return lcd;
-}
-
-QRect MainWindow::calculateHorizontalCenteredObjectRect(int objectWidth, int objectHeigth)
-{
-    int offsetBase = static_cast<int>(objectWidth / 2);
-    int leftX = mainWindowHorizontalCenter - offsetBase;
-    int topY = currentHeight;
-
-    return QRect(leftX, topY, objectWidth, objectHeigth);
 }
 
 int MainWindow::getLabelWidth(QLabel *lab)
@@ -92,26 +147,41 @@ int MainWindow::getLabelWidth(QLabel *lab)
     return fm.horizontalAdvance(lab->text());
 }
 
-QLabel *MainWindow::createCenteredLabel(const char *labText, const char *labName)
+QLabel *MainWindow::createNamedLabel(const char *labText, const char *labName)
 {
     QLabel* newLabel;
 
     newLabel = new QLabel(labText, centralwidget);
     newLabel->setObjectName(QString::fromUtf8(labName));
-    newLabel->setGeometry(calculateHorizontalCenteredObjectRect(
-        getLabelWidth(newLabel), labelHeight));
-    currentHeight += labelHeight + verticleSpace;
+    newLabel->setGeometry(0, 0, getLabelWidth(newLabel), labelHeight);
+    newLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     return newLabel;
 }
 
 QLabel *MainWindow::createDirectoryDisplayLab(const char *labName)
 {
-    QLabel* newDisplay = new QLabel(centralwidget);
+    QString blankLabValue;
+    for (int i = 0; i < 160; i++)
+    {
+        blankLabValue += ' ';
+    }
+
+    QLabel* newDisplay = new QLabel(blankLabValue, centralwidget);
     newDisplay->setObjectName(QString::fromUtf8(labName));
-    newDisplay->setGeometry(calculateHorizontalCenteredObjectRect(maxOjectWidth, labelHeight));
+    newDisplay->setGeometry(0, 0, maxOjectWidth, labelHeight);
     newDisplay->setFrameShape(QFrame::Box);
-    currentHeight += labelHeight + verticleSpace;
+    newDisplay->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     return newDisplay;
+}
+
+QPushButton* MainWindow::CreateNamedButton(const char* buttonText, const char* buttonName)
+{
+    QPushButton* newButton = new QPushButton(buttonText, centralwidget);
+
+    newButton->setObjectName(QString::fromUtf8(buttonName));
+    newButton->setGeometry(0, 0, newButton->width(), buttonHeight);
+
+    return newButton;
 }
