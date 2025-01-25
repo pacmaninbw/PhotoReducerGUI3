@@ -12,13 +12,14 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QVBoxLayout>
 
 class OptionsDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit OptionsDialog(QWidget *parent = nullptr);
+    explicit OptionsDialog(QWidget* parent = nullptr);
     ~OptionsDialog();
 
 public slots:
@@ -26,30 +27,44 @@ public slots:
 signals:
 
 private slots:
+    void on_sourceDirBrowsePushButton_clicked();
+    void on_targetDirectoryBrowsePushButton_clicked();
+    void on_optionsButtonBox_accepted();
 
 private:
-    void setUpFileGroupBox();
-    void setUpPhotoOptionGroupBox();
-    QCheckBox* createAndInit(const QString &boxText, const char* objectName);
-    QGroupBox *fileAndDirectoryGroupBox;
-    QFormLayout *fileAndDirectorylayout;
-    QCheckBox *JPGFileTypeCheckBox;
-    QCheckBox *PNGFileTypecheckBox;
-    QCheckBox *fixFileNameCheckBox;
-    QCheckBox *overwriteCheckBox;
-    QLineEdit *sourceDirectoryLineEdit;
-    QLineEdit *targetDirectoryLineEdit;
-    QLineEdit *addExtensionLineEdit;
-    QPushButton *sourceDirBrowsePushButton;
-    QPushButton *targetDirectoryBrowsePushButton;
-    QGroupBox *photoOptionsBox;
-    QFormLayout *photoOptionsLayout;
-    QCheckBox *maintainRatioCheckBox;
-    QCheckBox *displayResizedCheckBox;
-    QLineEdit *maxWidthLineEdit;
-    QLineEdit *maxHeightLineEdit;
-    QLineEdit *scaleFactorLineEdit;
-    QLabel *scaleFactorLabel;
+    void setUpOtionsDialogUI();
+    QGroupBox* setUpFileGroupBox();
+    QGroupBox* setUpPhotoOptionGroupBox();
+    QDialogButtonBox* setrUpOptionsButtonBox();
+    QCheckBox* createNamedCheckBox(const QString &boxText, const char* objectName);
+    QPushButton* createNamedButton(const QString &buttonText, const char* buttonName);
+    QLineEdit* createNamedLineItem(const char* objectName);
+    QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);
+    QHBoxLayout* layOutSourceDirectory();
+    QHBoxLayout* layOutTargetDirectory();
+
+    QGroupBox* fileAndDirectoryGroupBox;
+    QCheckBox* JPGFileTypeCheckBox;
+    QCheckBox* PNGFileTypecheckBox;
+    QCheckBox* fixFileNameCheckBox;
+    QCheckBox* overwriteCheckBox;
+    QLineEdit* sourceDirectoryLineEdit;
+    QLineEdit* targetDirectoryLineEdit;
+    QLineEdit* addExtensionLineEdit;
+    QPushButton* sourceDirBrowsePushButton;
+    QPushButton* targetDirectoryBrowsePushButton;
+    QGroupBox* photoOptionsBox;
+    QCheckBox* maintainRatioCheckBox;
+    QCheckBox* displayResizedCheckBox;
+    QLineEdit* maxWidthLineEdit;
+    QLineEdit* maxHeightLineEdit;
+    QLineEdit* scaleFactorLineEdit;
+    QDialogButtonBox* optionsButtonBox;
+    QFormLayout* photoOptionsLayout;
+    QFormLayout* fileAndDirectorylayout;
+    QVBoxLayout* optionsDialogLayout;
+
+    const int groupBoxSpacing = 60;
 };
 
 #endif  // OPTIONSDIALOG_H_
