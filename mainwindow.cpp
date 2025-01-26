@@ -20,9 +20,9 @@ MainWindow::~MainWindow()
     delete resizedPhotosLcdNumber;
     delete sourceDirectoryLabel;
     delete resizeProgressBar;
-    delete sourceDirectoryValueLabel;
+    delete sourceDirectoryValue;
     delete targetDirectoryLabel;
-    delete targetDirectoryValueLabel;
+    delete targetDirectoryValue;
     delete optionsPushButton;
     delete resizePhotosButton;
     delete resizePhotosVBoxLayout;
@@ -57,7 +57,6 @@ void MainWindow::on_resizePhotosButton_Clicked()
  */
 void MainWindow::setUpUI()
 {
-
     centralwidget = new QWidget(this);
     centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
     mwLayout = new QVBoxLayout(centralwidget);
@@ -83,26 +82,18 @@ void MainWindow::setUpDirectoryDisplays()
     sourceDirectoryLabel = createNamedLabel("Source Directory", "sourceDirectoryLabel");
     mwLayout->addWidget(sourceDirectoryLabel, 0, Qt::AlignHCenter);
 
-    sourceDirectoryValueLabel = createDirectoryDisplayLab("sourceDirectoryValueLabel");
-    mwLayout->addWidget(sourceDirectoryValueLabel, 0, Qt::AlignHCenter);
+    sourceDirectoryValue = createDirectoryDisplayLab("sourceDirectoryValue");
+    mwLayout->addWidget(sourceDirectoryValue, 0, Qt::AlignHCenter);
 
     targetDirectoryLabel = createNamedLabel("Target Directory", "targetDirectoryLabel");
     mwLayout->addWidget(targetDirectoryLabel, 0, Qt::AlignHCenter);
 
-    targetDirectoryValueLabel = createDirectoryDisplayLab("targetDirectoryValueLabel");
-    mwLayout->addWidget(targetDirectoryValueLabel, 0, Qt::AlignHCenter);
+    targetDirectoryValue = createDirectoryDisplayLab("targetDirectoryValue");
+    mwLayout->addWidget(targetDirectoryValue, 0, Qt::AlignHCenter);
 }
 
 void MainWindow::setUpProgressDisplays()
 {
-    resizeProgressBar = new QProgressBar(centralwidget);
-    resizeProgressBar->setRange(0, 200);
-    resizeProgressBar->setValue(100);
-    resizeProgressBar->setGeometry(0, 0, 500, 50);
-    resizeProgressBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    
-    mwLayout->addWidget(resizeProgressBar, 0, Qt::AlignHCenter);
-
     photoCountHBoxLayout = new QHBoxLayout;
     mwLayout->addLayout(photoCountHBoxLayout, 0);
 
@@ -123,6 +114,9 @@ void MainWindow::setUpProgressDisplays()
 
     resizedPhotosLcdNumber = createAndConfigureLCD("resizedPhotosLcdNumber", 100);
     resizePhotosVBoxLayout->addWidget(resizedPhotosLcdNumber, 0, Qt::AlignHCenter);
+
+    resizeProgressBar = createAndConfigureProgressBar("resizeProgressBar", 100);    
+    mwLayout->addWidget(resizeProgressBar, 0, Qt::AlignHCenter);
 }
 
 QLCDNumber *MainWindow::createAndConfigureLCD(const char *lcdName, const int initValue)
@@ -131,18 +125,31 @@ QLCDNumber *MainWindow::createAndConfigureLCD(const char *lcdName, const int ini
 
     lcd->setObjectName(QString::fromUtf8(lcdName));
 
-    QPalette palette = lcd->palette();
-    palette.setColor(QPalette::Window, Qt::black);
-    palette.setColor(QPalette::WindowText, Qt::green);
-    lcd->setAutoFillBackground(true);
-    lcd->setPalette(palette);
+    QString lcdStyle = generateWidthAndHeightStyleString(lcdWidth, lcdHeight);
+    lcdStyle += " background-color: black; color: yellow;";
+    lcd->setStyleSheet(lcdStyle);
+
     lcd->setSegmentStyle(QLCDNumber::Flat);
     lcd->setDigitCount(lcdDigitCount);
     lcd->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    lcd->setGeometry(0, 0, 200, lcdHeight);
     lcd->display(initValue);
 
     return lcd;
+}
+
+QProgressBar *MainWindow::createAndConfigureProgressBar(const char* objectName, const int initValue)
+{
+    QProgressBar* progressBar = new QProgressBar(centralwidget);
+    progressBar->setObjectName(QString::fromUtf8(objectName));
+    progressBar->setRange(0, 200);
+    progressBar->setValue(initValue);
+
+    progressBar->setStyleSheet(generateWidthAndHeightStyleString(
+        static_cast<int>(maxOjectWidth * 0.7), progressBarHeight));
+
+    progressBar->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    return progressBar;
 }
 
 int MainWindow::getLabelWidth(QLabel *lab)
@@ -158,24 +165,21 @@ QLabel *MainWindow::createNamedLabel(const char *labText, const char *labName)
 
     newLabel = new QLabel(labText, centralwidget);
     newLabel->setObjectName(QString::fromUtf8(labName));
-    newLabel->setGeometry(0, 0, getLabelWidth(newLabel), labelHeight);
+    newLabel->setStyleSheet(generateWidthAndHeightStyleString(getLabelWidth(newLabel), labelHeight));
     newLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     return newLabel;
 }
 
-QLabel *MainWindow::createDirectoryDisplayLab(const char *labName)
+QLineEdit* MainWindow::createDirectoryDisplayLab(const char *labName)
 {
-    QString blankLabValue;
-    for (int i = 0; i < 160; i++)
-    {
-        blankLabValue += ' ';
-    }
-
-    QLabel* newDisplay = new QLabel(blankLabValue, centralwidget);
+    QLineEdit* newDisplay = new QLineEdit(centralwidget);
     newDisplay->setObjectName(QString::fromUtf8(labName));
-    newDisplay->setGeometry(0, 0, maxOjectWidth, labelHeight);
-    newDisplay->setFrameShape(QFrame::Box);
+    newDisplay->setReadOnly(true);
+
+    QString displayStyle = generateWidthAndHeightStyleString(maxOjectWidth, labelHeight);
+    newDisplay->setStyleSheet(displayStyle);
+
     newDisplay->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     return newDisplay;
@@ -186,7 +190,16 @@ QPushButton* MainWindow::CreateNamedButton(const char* buttonText, const char* b
     QPushButton* newButton = new QPushButton(buttonText, centralwidget);
 
     newButton->setObjectName(QString::fromUtf8(buttonName));
-    newButton->setGeometry(0, 0, newButton->width(), buttonHeight);
+    newButton->setStyleSheet(generateWidthAndHeightStyleString(newButton->width(), buttonHeight));
 
     return newButton;
+}
+
+QString MainWindow::generateWidthAndHeightStyleString(const int width, const int height)
+{
+    QString widthAndHeightStyleString("width: ");
+    widthAndHeightStyleString += QString::number(width) + "; height:";
+    widthAndHeightStyleString += QString::number(height) += ";";
+
+    return widthAndHeightStyleString;
 }

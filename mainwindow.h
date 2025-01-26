@@ -6,12 +6,14 @@
 #include <QHBoxLayout>
 #include <QLCDNumber>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QRect>
 #include <QStatusBar>
+#include <QString>
 #include <QVBoxLayout>
 #include <QWidget>
 
@@ -40,18 +42,22 @@ private:
     const int mainWindowHeight = 500;
     const int maxOjectWidth = static_cast<int>(mainWindowWidth * 0.8);
     const int lcdHeight = 23;
+    const int lcdWidth = 200;
     const int labelHeight = 17;
     const int buttonHeight = 25;
+    const int progressBarHeight = 60;
     const int lcdDigitCount = 5;
 
     void setUpUI();
     void setUpDirectoryDisplays();
     void setUpProgressDisplays();
     QLCDNumber* createAndConfigureLCD(const char* lcdName, const int initValue = 0);
+    QProgressBar* createAndConfigureProgressBar(const char* objectName, const int initValue = 0);
     int getLabelWidth(QLabel* lab);
     QLabel* createNamedLabel(const char* labText, const char* labName);
-    QLabel* createDirectoryDisplayLab(const char* labName);
+    QLineEdit* createDirectoryDisplayLab(const char* labName);
     QPushButton* CreateNamedButton(const char* buttonText, const char* buttonName);
+    QString generateWidthAndHeightStyleString(const int width, const int height);
 
     QWidget* centralwidget;
     QVBoxLayout* mwLayout;
@@ -64,9 +70,9 @@ private:
     QLCDNumber* resizedPhotosLcdNumber;
     QLabel* sourceDirectoryLabel;
     QProgressBar* resizeProgressBar;
-    QLabel* sourceDirectoryValueLabel;
+    QLineEdit* sourceDirectoryValue;
     QLabel* targetDirectoryLabel;
-    QLabel* targetDirectoryValueLabel;
+    QLineEdit* targetDirectoryValue;
     QPushButton* optionsPushButton;
     QPushButton* resizePhotosButton;
     QMenuBar* menubar;
