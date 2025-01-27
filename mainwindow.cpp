@@ -6,10 +6,16 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 
+    model = new PhotoReducerModel("model", this);
+    connectModelSignalsToSlots();
+
     setUpUI();
 
     connect(optionsPushButton, &QPushButton::clicked, this, &MainWindow::on_optionsPushButton_Clicked);
     connect(resizePhotosButton, &QPushButton::clicked, this, &MainWindow::on_resizePhotosButton_Clicked);
+
+    repaint();
+
 }
 
 MainWindow::~MainWindow()
@@ -35,10 +41,39 @@ MainWindow::~MainWindow()
 /*
  * Slots
  */
+void MainWindow::connectModelSignalsToSlots()
+{
+    connect(model, &PhotoReducerModel::resizedPhotosCountValueChanged, this, &MainWindow::on_resizedPhotos_valueChanged);
+    connect(model, &PhotoReducerModel::photosToResizeCountValueChanged, this, &MainWindow::on_photosToResizeCount_ValueChanged);
+    connect(model, &PhotoReducerModel::sourceDirectoryValueChanged, this, &MainWindow::on_SourceDirectory_Changed);
+    connect(model, &PhotoReducerModel::targetDirectoryValueChanged, this, &MainWindow::on_TargetDirectory_Changed);
+}
+
+void MainWindow::on_resizedPhotos_valueChanged(std::size_t resizedPhotoCount)
+{
+    resizedPhotosLcdNumber->display(static_cast<int>(resizedPhotoCount));
+    resizeProgressBar->setValue(static_cast<int>(resizedPhotoCount));
+}
+
+void MainWindow::on_photosToResizeCount_ValueChanged(std::size_t photosToResize)
+{
+    filesToResizeLcdNumber->display(static_cast<int>(photosToResize));
+}
+
+void MainWindow::on_SourceDirectory_Changed(QString srcDir)
+{
+    sourceDirectoryValue->setText(srcDir);
+}
+
+void MainWindow::on_TargetDirectory_Changed(QString targetDir)
+{
+    targetDirectoryValue->setText(targetDir);
+}
+
 void MainWindow::on_optionsPushButton_Clicked()
 {
     OptionsDialog optionDialog(this);
-    optionDialog.resize(500,500);
+//    optionDialog.resize(500,500);
 
 
 //    optionBox.setModel(photoReducermodel);
@@ -84,12 +119,14 @@ void MainWindow::setUpDirectoryDisplays()
 
     sourceDirectoryValue = createDirectoryDisplayLab("sourceDirectoryValue");
     mwLayout->addWidget(sourceDirectoryValue, 0, Qt::AlignHCenter);
+    sourceDirectoryValue->setText(model->getSourceDirectory());
 
     targetDirectoryLabel = createNamedLabel("Target Directory", "targetDirectoryLabel");
     mwLayout->addWidget(targetDirectoryLabel, 0, Qt::AlignHCenter);
 
     targetDirectoryValue = createDirectoryDisplayLab("targetDirectoryValue");
     mwLayout->addWidget(targetDirectoryValue, 0, Qt::AlignHCenter);
+    targetDirectoryValue->setText(model->getTargetDirectory());
 }
 
 void MainWindow::setUpProgressDisplays()
@@ -106,16 +143,19 @@ void MainWindow::setUpProgressDisplays()
     filesToResizeLabel = createNamedLabel("Photos to Resize", "filesToResizeLabel");
     filesToResizeVBoxLayout->addWidget(filesToResizeLabel, 0, Qt::AlignHCenter);
 
-    filesToResizeLcdNumber = createAndConfigureLCD("filesToResizeLcdNumber", 200);
+    filesToResizeLcdNumber = createAndConfigureLCD(
+        "filesToResizeLcdNumber", model->getPhotosToResizeCount());
     filesToResizeVBoxLayout->addWidget(filesToResizeLcdNumber, 0, Qt::AlignHCenter);
 
     resizedPhotosLabel = createNamedLabel("Resized Photos","resizedPhotosLabel");
     resizePhotosVBoxLayout->addWidget(resizedPhotosLabel, 0, Qt::AlignHCenter);
 
-    resizedPhotosLcdNumber = createAndConfigureLCD("resizedPhotosLcdNumber", 100);
+    resizedPhotosLcdNumber = createAndConfigureLCD(
+        "resizedPhotosLcdNumber", model->getResizedPhotoCount());
     resizePhotosVBoxLayout->addWidget(resizedPhotosLcdNumber, 0, Qt::AlignHCenter);
 
-    resizeProgressBar = createAndConfigureProgressBar("resizeProgressBar", 100);    
+    resizeProgressBar = createAndConfigureProgressBar(
+        "resizeProgressBar", model->getResizedPhotoCount());
     mwLayout->addWidget(resizeProgressBar, 0, Qt::AlignHCenter);
 }
 
@@ -203,3 +243,4 @@ QString MainWindow::generateWidthAndHeightStyleString(const int width, const int
 
     return widthAndHeightStyleString;
 }
+
