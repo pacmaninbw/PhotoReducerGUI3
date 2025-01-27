@@ -19,7 +19,6 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
-        PhotoCounter.h
         OptionsDialog.cpp 
         OptionsDialog.h
 	PhotoReducerModel.h
