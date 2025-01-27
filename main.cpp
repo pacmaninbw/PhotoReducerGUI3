@@ -7,10 +7,9 @@ int main(int argc, char *argv[])
 {
     QApplication theApp(argc, argv);
 
-    PhotoReducerModel theModel;
-
     MainWindow mainWindow;
-    mainWindow.show();
     
+    mainWindow.show();
+
     return theApp.exec();
 }
