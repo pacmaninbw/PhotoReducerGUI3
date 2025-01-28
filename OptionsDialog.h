@@ -50,10 +50,14 @@ private:
     QGroupBox* setUpFileGroupBox();
     QGroupBox* setUpPhotoOptionGroupBox();
     QDialogButtonBox* setrUpOptionsButtonBox();
+/*
+ * Name all widgets so that the MetaObject connect works.
+ */
     QCheckBox* createNamedCheckBox(const QString &boxText, const char* objectName);
     QPushButton* createNamedButton(const QString &buttonText, const char* buttonName);
     QLineEdit* createNamedLineItem(const char* objectName, bool readOnly = false);
     QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);
+    
     QHBoxLayout* layOutSourceDirectory();
     QHBoxLayout* layOutTargetDirectory();
 

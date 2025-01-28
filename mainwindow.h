@@ -54,7 +54,7 @@ private:
     const int progressBarHeight = 60;
     const int lcdDigitCount = 5;
 
-    void setUpUI();
+    void setUpMainWindowUI();
     void setUpDirectoryDisplays();
     void setUpProgressDisplays();
     QLCDNumber* createAndConfigureLCD(const char* lcdName, const int initValue = 0);
@@ -64,8 +64,8 @@ private:
     QLineEdit* createDirectoryDisplayLab(const char* labName);
     QPushButton* CreateNamedButton(const char* buttonText, const char* buttonName);
     QString generateWidthAndHeightStyleString(const int width, const int height);
-    void connectModelSignalsToSlots();
-    void connectModelAndOptionsSingleAndSlots(OptionsDialog* optionsDialog);
+    void connectModelAndMainWindowSignalsToSlots();
+    void connectModelAndOptionsSignelsAndSlots(OptionsDialog* optionsDialog);
 
     PhotoReducerModel* model;
     QWidget* centralwidget;

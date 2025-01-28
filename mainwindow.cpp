@@ -7,9 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
 
     model = new PhotoReducerModel("model", this);
-    connectModelSignalsToSlots();
+    connectModelAndMainWindowSignalsToSlots();
 
-    setUpUI();
+    setUpMainWindowUI();
 
     connect(optionsPushButton, &QPushButton::clicked, this, &MainWindow::on_optionsPushButton_Clicked);
     connect(resizePhotosButton, &QPushButton::clicked, this, &MainWindow::on_resizePhotosButton_Clicked);
@@ -26,7 +26,7 @@ MainWindow::~MainWindow()
 /*
  * Slots
  */
-void MainWindow::connectModelSignalsToSlots()
+void MainWindow::connectModelAndMainWindowSignalsToSlots()
 {
     connect(model, &PhotoReducerModel::resizedPhotosCountValueChanged,
         this, &MainWindow::on_resizedPhotos_valueChanged);
@@ -38,7 +38,7 @@ void MainWindow::connectModelSignalsToSlots()
         this, &MainWindow::on_TargetDirectory_Changed);
 }
 
-void MainWindow::connectModelAndOptionsSingleAndSlots(OptionsDialog* optionsDialog)
+void MainWindow::connectModelAndOptionsSignelsAndSlots(OptionsDialog* optionsDialog)
 {
     connect(optionsDialog, &OptionsDialog::sourceDirectoryLEChanged,
         model, &PhotoReducerModel::optionsSourceDirectoryEdited);
@@ -83,7 +83,7 @@ void MainWindow::on_optionsPushButton_Clicked()
     OptionsDialog optionDialog(this);
 //    optionDialog.resize(500,500);
 
-    connectModelAndOptionsSingleAndSlots(&optionDialog);
+    connectModelAndOptionsSignelsAndSlots(&optionDialog);
 
 //    optionBox.setModel(photoReducermodel);
 
@@ -99,7 +99,7 @@ void MainWindow::on_resizePhotosButton_Clicked()
 /*
  * Private UI methods
  */
-void MainWindow::setUpUI()
+void MainWindow::setUpMainWindowUI()
 {
     centralwidget = new QWidget(this);
     centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
