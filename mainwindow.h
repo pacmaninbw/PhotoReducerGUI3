@@ -41,19 +41,6 @@ private slots:
     void on_resizePhotosButton_Clicked();
 
 private:
-/*
- * Size and positioning constants.
- */
-    const int mainWindowWidth = 800;
-    const int mainWindowHeight = 500;
-    const int maxOjectWidth = static_cast<int>(mainWindowWidth * 0.8);
-    const int lcdHeight = 23;
-    const int lcdWidth = 200;
-    const int labelHeight = 17;
-    const int buttonHeight = 25;
-    const int progressBarHeight = 60;
-    const int lcdDigitCount = 5;
-
     void setUpMainWindowUI();
     void setUpDirectoryDisplays();
     void setUpProgressDisplays();
@@ -66,6 +53,18 @@ private:
     QString generateWidthAndHeightStyleString(const int width, const int height);
     void connectModelAndMainWindowSignalsToSlots();
     void connectModelAndOptionsSignelsAndSlots(OptionsDialog* optionsDialog);
+/*
+ * Size and positioning constants.
+ */
+    const int mainWindowWidth = 800;
+    const int mainWindowHeight = 500;
+    const int maxOjectWidth = static_cast<int>(mainWindowWidth * 0.8);
+    const int lcdHeight = 23;
+    const int lcdWidth = 200;
+    const int labelHeight = 17;
+    const int buttonHeight = 25;
+    const int progressBarHeight = 60;
+    const int lcdDigitCount = 5;
 
     PhotoReducerModel* model;
     QWidget* centralwidget;
