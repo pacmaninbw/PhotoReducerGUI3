@@ -23,6 +23,7 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
     QObject::connect(optionsButtonBox, &QDialogButtonBox::accepted,
         this, qOverload<>(&QDialog::accept));
+        
     QObject::connect(optionsButtonBox, &QDialogButtonBox::rejected,
         this, qOverload<>(&QDialog::reject));
 
@@ -44,6 +45,16 @@ void OptionsDialog::on_sourceDirBrowsePushButton_clicked()
     sourceDirectoryLineEdit->setText(sourceDir);
 }
 
+void OptionsDialog::on_targetDirectoryLineEdit_textChanged()
+{
+    emit targetDirectoryLEChanged(targetDirectoryLineEdit->text());
+}
+
+void OptionsDialog::on_sourceDirectoryLineEdit_textChanged()
+{
+    emit sourceDirectoryLEChanged(sourceDirectoryLineEdit->text());
+}
+
 void OptionsDialog::on_targetDirectoryBrowsePushButton_clicked()
 {
     QString targetDir = targetDirectoryLineEdit->text();
@@ -54,10 +65,17 @@ void OptionsDialog::on_targetDirectoryBrowsePushButton_clicked()
     targetDirectoryLineEdit->setText(targetDir);
 }
 
+void OptionsDialog::on_addExtensionLineEdit_editingFinished()
+{
+    emit optionsaddExtensionLEChanged(addExtensionLineEdit->text());
+}
+
 void OptionsDialog::on_optionsButtonBox_accepted()
 {
     QString temp;
-    bool hasErrors = false;
+    bool hasNoErrors = true;
+
+    emit optionsDoneFindPhotoFiles(hasNoErrors);
 
 #if 0
     updateModelFileOptions();
@@ -155,7 +173,7 @@ QGroupBox* OptionsDialog::setUpFileGroupBox()
     fileAndDirectorylayout->addRow("Source Directory", layOutSourceDirectory());
     fileAndDirectorylayout->addRow("Target Directory", layOutTargetDirectory());
 
-    addExtensionLineEdit = new QLineEdit(this);
+    addExtensionLineEdit = createNamedLineItem("addExtensionLineEdit");
     fileAndDirectorylayout->addRow("Add Extension", addExtensionLineEdit);
 
     fileAndDirectoryGroupBox = new QGroupBox("File Type and Directory Options", this);
@@ -180,10 +198,11 @@ QPushButton* OptionsDialog::createNamedButton(const QString &buttonText, const c
     return newbutton;
 }
 
-QLineEdit* OptionsDialog::createNamedLineItem(const char *objectName)
+QLineEdit* OptionsDialog::createNamedLineItem(const char *objectName, bool readOnly)
 {
     QLineEdit* newLineEdit = new QLineEdit(this);
     newLineEdit->setObjectName(QString::fromUtf8(objectName));
+    newLineEdit->setReadOnly(readOnly);
 
     return newLineEdit;
 }
@@ -202,7 +221,7 @@ QHBoxLayout *OptionsDialog::layOutSourceDirectory()
     QHBoxLayout *srcDirLayout = new QHBoxLayout;
     srcDirLayout->setObjectName("srcDirLayout");
 
-    sourceDirectoryLineEdit = createNamedLineItem("sourceDirectoryLineEdit");
+    sourceDirectoryLineEdit = createNamedLineItem("sourceDirectoryLineEdit", true);
     srcDirLayout->addWidget(sourceDirectoryLineEdit);
 
     sourceDirBrowsePushButton = createNamedButton("Browse", "sourceDirBrowsePushButton");
@@ -216,7 +235,7 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
     QHBoxLayout *targetDirLayout = new QHBoxLayout();
     targetDirLayout->setObjectName("targetDirLayout");
 
-    targetDirectoryLineEdit = createNamedLineItem("targetDirectoryLineEdit");
+    targetDirectoryLineEdit = createNamedLineItem("targetDirectoryLineEdit", true);
     targetDirectoryBrowsePushButton = createNamedButton(
         "Browse", "targetDirectoryBrowsePushButton");
 

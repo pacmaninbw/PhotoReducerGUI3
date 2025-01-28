@@ -20,22 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    delete filesToResizeLabel;
-    delete filesToResizeLcdNumber;
-    delete resizedPhotosLabel;
-    delete resizedPhotosLcdNumber;
-    delete sourceDirectoryLabel;
-    delete resizeProgressBar;
-    delete sourceDirectoryValue;
-    delete targetDirectoryLabel;
-    delete targetDirectoryValue;
-    delete optionsPushButton;
-    delete resizePhotosButton;
-    delete resizePhotosVBoxLayout;
-    delete filesToResizeVBoxLayout;
-    delete photoCountHBoxLayout;
-    delete mwLayout;
-    delete centralwidget;
+    delete model;
 }
 
 /*
@@ -43,10 +28,33 @@ MainWindow::~MainWindow()
  */
 void MainWindow::connectModelSignalsToSlots()
 {
-    connect(model, &PhotoReducerModel::resizedPhotosCountValueChanged, this, &MainWindow::on_resizedPhotos_valueChanged);
-    connect(model, &PhotoReducerModel::photosToResizeCountValueChanged, this, &MainWindow::on_photosToResizeCount_ValueChanged);
-    connect(model, &PhotoReducerModel::sourceDirectoryValueChanged, this, &MainWindow::on_SourceDirectory_Changed);
-    connect(model, &PhotoReducerModel::targetDirectoryValueChanged, this, &MainWindow::on_TargetDirectory_Changed);
+    connect(model, &PhotoReducerModel::resizedPhotosCountValueChanged,
+        this, &MainWindow::on_resizedPhotos_valueChanged);
+    connect(model, &PhotoReducerModel::photosToResizeCountValueChanged,
+        this, &MainWindow::on_photosToResizeCount_ValueChanged);
+    connect(model, &PhotoReducerModel::sourceDirectoryValueChanged,
+        this, &MainWindow::on_SourceDirectory_Changed);
+    connect(model, &PhotoReducerModel::targetDirectoryValueChanged,
+        this, &MainWindow::on_TargetDirectory_Changed);
+}
+
+void MainWindow::connectModelAndOptionsSingleAndSlots(OptionsDialog* optionsDialog)
+{
+    connect(optionsDialog, &OptionsDialog::sourceDirectoryLEChanged,
+        model, &PhotoReducerModel::optionsSourceDirectoryEdited);
+    connect(optionsDialog, &OptionsDialog::targetDirectoryLEChanged,
+        model, &PhotoReducerModel::optionsTargetDirectoryEdited);
+    connect(optionsDialog, &OptionsDialog::optionsJPGFileTypeCheckBoxChanged,
+        model, &PhotoReducerModel::optionsJPGCheckBoxChanged);
+    connect(optionsDialog, &OptionsDialog::optionsPNGFileTypecheckBoxChanged,
+        model, &PhotoReducerModel::optionsPNGCheckBoxChanged);
+    connect(optionsDialog, &OptionsDialog::optionsSafeWebNameCheckBoxChanged,
+        model, &PhotoReducerModel::optionsSafeWebNameChanged);
+    connect(optionsDialog, &OptionsDialog::optionsOverwriteCheckBoxChanged,
+        model, &PhotoReducerModel::optionsOverWriteFilesChanged);
+
+    connect(optionsDialog, &OptionsDialog::optionsDoneFindPhotoFiles,
+        model, &PhotoReducerModel::optionsGoodFindFiles);
 }
 
 void MainWindow::on_resizedPhotos_valueChanged(std::size_t resizedPhotoCount)
@@ -75,6 +83,7 @@ void MainWindow::on_optionsPushButton_Clicked()
     OptionsDialog optionDialog(this);
 //    optionDialog.resize(500,500);
 
+    connectModelAndOptionsSingleAndSlots(&optionDialog);
 
 //    optionBox.setModel(photoReducermodel);
 

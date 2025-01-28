@@ -56,3 +56,22 @@ void PhotoReducerModel::setTargetDirectory(QString newTargetDir)
         emit targetDirectoryValueChanged(newTargetDir);
     }
 }
+
+/*
+ * Slots
+ */
+void PhotoReducerModel::optionsSourceDirectoryEdited(QString newSrcDir)
+{
+    setSourceDirectory(newSrcDir);
+}
+
+void PhotoReducerModel::optionsTargetDirectoryEdited(QString newTargetDir)
+{
+    setTargetDirectory(newTargetDir);
+}
+
+void PhotoReducerModel::optionsGoodFindFiles(bool optionsGood)
+{
+    
+}
+

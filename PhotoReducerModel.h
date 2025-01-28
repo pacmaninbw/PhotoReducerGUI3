@@ -5,8 +5,6 @@
 #include <QString>
 #include <string>
 
-class MainWindow;
-
 class PhotoReducerModel : public QObject
 {
     Q_OBJECT
@@ -14,12 +12,24 @@ class PhotoReducerModel : public QObject
 public:
     explicit PhotoReducerModel(const char * modelName, QObject *parent = nullptr);
     ~PhotoReducerModel() = default;
+/*
+ * Do to sequence issues, these accessor functions are necessary.
+ * The controls in the mainWindow don't exist when the signals for these fields
+ * are initially sent.
+ */
     QString getSourceDirectory() { return QString::fromStdString(sourceDirectory); };
     QString getTargetDirectory() { return QString::fromStdString(targetDirectory); };
     std::size_t getResizedPhotoCount() { return resizedPhotosCount; };
     std::size_t getPhotosToResizeCount() { return photosToResizeCount; };
 
 public slots:
+    void optionsSourceDirectoryEdited(QString newSrcDir);
+    void optionsTargetDirectoryEdited(QString newTargetDir);
+    void optionsJPGCheckBoxChanged(bool checked) { processJPGFiles = checked; };
+    void optionsPNGCheckBoxChanged(bool checked) { processPNGFiles = checked; };
+    void optionsSafeWebNameChanged(bool checked) { fixFileName = checked; };
+    void optionsOverWriteFilesChanged(bool checked) { overWriteFiles = checked; };
+    void optionsGoodFindFiles(bool optionsGood);
 
 signals:
     void resizedPhotosCountValueChanged(std::size_t newValue);

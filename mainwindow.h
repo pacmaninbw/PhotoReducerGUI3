@@ -2,6 +2,7 @@
 #define MAINWINDOW_H_
 
 #include "PhotoReducerModel.h"
+#include "OptionsDialog.h"
 #include <QVariant>
 #include <QApplication>
 #include <QHBoxLayout>
@@ -64,6 +65,7 @@ private:
     QPushButton* CreateNamedButton(const char* buttonText, const char* buttonName);
     QString generateWidthAndHeightStyleString(const int width, const int height);
     void connectModelSignalsToSlots();
+    void connectModelAndOptionsSingleAndSlots(OptionsDialog* optionsDialog);
 
     PhotoReducerModel* model;
     QWidget* centralwidget;
