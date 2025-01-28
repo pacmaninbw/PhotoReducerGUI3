@@ -109,6 +109,8 @@ void OptionsDialog::setUpOtionsDialogUI()
     QString dialogTitle = windowTitle();
     dialogTitle += " Options:";
 
+    resize(500, 500);
+
     setWindowTitle(dialogTitle);
 }
 
