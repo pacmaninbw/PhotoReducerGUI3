@@ -81,14 +81,12 @@ void MainWindow::on_TargetDirectory_Changed(QString targetDir)
 void MainWindow::on_optionsPushButton_Clicked()
 {
     OptionsDialog optionDialog(this);
-//    optionDialog.resize(500,500);
 
     connectModelAndOptionsSignelsAndSlots(&optionDialog);
 
-//    optionBox.setModel(photoReducermodel);
-
     if (optionDialog.exec() == QDialog::Accepted)
     {
+        resizePhotosButton->setEnabled(true);
     }
 }
 
