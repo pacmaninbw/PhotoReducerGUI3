@@ -12,21 +12,6 @@ class PhotoReducerModel : public QObject
 public:
     explicit PhotoReducerModel(const char * modelName, QObject *parent = nullptr);
     ~PhotoReducerModel() = default;
-    QString getSourceDirectory() { return QString::fromStdString(sourceDirectory); };
-    QString getTargetDirectory() { return QString::fromStdString(targetDirectory); };
-    QString getRelocDirectory() const { return QString::fromStdString(relocDirectory); };
-    QString getPhotoExtension() const { return QString::fromStdString(resizedPostfix); };
-    bool getMakeWebSafe() const { return fixFileName; };
-    bool getJPGFiles() const { return processJPGFiles; };
-    void setOverwriteFiles(bool enable) { overWriteFiles = enable; };
-    bool getOverwriteFiles() const { return overWriteFiles; };
-    std::size_t getResizedPhotoCount() { return resizedPhotosCount; };
-    std::size_t getPhotosToResizeCount() { return photosToResizeCount; };
-    bool getMaintainRation() const { return maintainRatio; };
-    bool getDisplayResized() const { return displayResized; };
-    std::size_t getMaxWidth() const { return maxWidth; };
-    std::size_t getMaxHeight() const { return maxHeight; };
-    unsigned int getScaleFactor() const { return scaleFactor; };
 
 public slots:
 /*
@@ -39,6 +24,7 @@ public slots:
     void optionsSafeWebNameChanged(bool checked) { fixFileName = checked; };
     void optionsOverWriteFilesChanged(bool checked) { overWriteFiles = checked; };
     void optionsGoodFindFiles(bool optionsGood);
+    void initializeMainWindow();
 /*
  * Photo options slots.
  */

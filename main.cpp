@@ -1,5 +1,4 @@
-#include "mainwindow.h"
-#include "PhotoReducerModel.h"
+#include "PhotoReducerController.h"
 
 #include <QApplication>
 
@@ -7,9 +6,13 @@ int main(int argc, char *argv[])
 {
     QApplication theApp(argc, argv);
 
-    MainWindow mainWindow;
+    PhotoReducerController controller("TheController");
+    controller.createModel();
+    controller.creatMainWindow();
+    controller.connectModelAndMainWindowSignalsToSlots();
+    controller.initMainWindowValuesAndShow();
+    controller.connectControllerAndModelSignalsToSlots();
     
-    mainWindow.show();
-
+    
     return theApp.exec();
 }

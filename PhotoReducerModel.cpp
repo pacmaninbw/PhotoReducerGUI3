@@ -60,6 +60,11 @@ void PhotoReducerModel::setTargetDirectory(QString newTargetDir)
 /*
  * Slots
  */
+void PhotoReducerModel::initializeMainWindow()
+{
+
+}
+
 void PhotoReducerModel::optionsSourceDirectoryEdited(QString newSrcDir)
 {
     setSourceDirectory(newSrcDir);

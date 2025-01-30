@@ -1,62 +1,21 @@
 #include "mainwindow.h"
-#include "OptionsDialog.h"
-#include <QDir>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-
-    model = new PhotoReducerModel("model", this);
-    connectModelAndMainWindowSignalsToSlots();
-
     setUpMainWindowUI();
 
     connect(optionsPushButton, &QPushButton::clicked, this, &MainWindow::on_optionsPushButton_Clicked);
     connect(resizePhotosButton, &QPushButton::clicked, this, &MainWindow::on_resizePhotosButton_Clicked);
-
-    repaint();
-
 }
 
 MainWindow::~MainWindow()
 {
-    delete model;
 }
 
 /*
  * Slots
  */
-void MainWindow::connectModelAndMainWindowSignalsToSlots()
-{
-    connect(model, &PhotoReducerModel::resizedPhotosCountValueChanged,
-        this, &MainWindow::on_resizedPhotos_valueChanged);
-    connect(model, &PhotoReducerModel::photosToResizeCountValueChanged,
-        this, &MainWindow::on_photosToResizeCount_ValueChanged);
-    connect(model, &PhotoReducerModel::sourceDirectoryValueChanged,
-        this, &MainWindow::on_SourceDirectory_Changed);
-    connect(model, &PhotoReducerModel::targetDirectoryValueChanged,
-        this, &MainWindow::on_TargetDirectory_Changed);
-}
-
-void MainWindow::connectModelAndOptionsSignelsAndSlots(OptionsDialog* optionsDialog)
-{
-    connect(optionsDialog, &OptionsDialog::sourceDirectoryLEChanged,
-        model, &PhotoReducerModel::optionsSourceDirectoryEdited);
-    connect(optionsDialog, &OptionsDialog::targetDirectoryLEChanged,
-        model, &PhotoReducerModel::optionsTargetDirectoryEdited);
-    connect(optionsDialog, &OptionsDialog::optionsJPGFileTypeCheckBoxChanged,
-        model, &PhotoReducerModel::optionsJPGCheckBoxChanged);
-    connect(optionsDialog, &OptionsDialog::optionsPNGFileTypecheckBoxChanged,
-        model, &PhotoReducerModel::optionsPNGCheckBoxChanged);
-    connect(optionsDialog, &OptionsDialog::optionsSafeWebNameCheckBoxChanged,
-        model, &PhotoReducerModel::optionsSafeWebNameChanged);
-    connect(optionsDialog, &OptionsDialog::optionsOverwriteCheckBoxChanged,
-        model, &PhotoReducerModel::optionsOverWriteFilesChanged);
-
-    connect(optionsDialog, &OptionsDialog::optionsDoneFindPhotoFiles,
-        model, &PhotoReducerModel::optionsGoodFindFiles);
-}
-
 void MainWindow::on_resizedPhotos_valueChanged(std::size_t resizedPhotoCount)
 {
     resizedPhotosLcdNumber->display(static_cast<int>(resizedPhotoCount));
@@ -80,14 +39,7 @@ void MainWindow::on_TargetDirectory_Changed(QString targetDir)
 
 void MainWindow::on_optionsPushButton_Clicked()
 {
-    OptionsDialog optionDialog(this);
-
-    connectModelAndOptionsSignelsAndSlots(&optionDialog);
-
-    if (optionDialog.exec() == QDialog::Accepted)
-    {
-        resizePhotosButton->setEnabled(true);
-    }
+    emit mainWindowOptionsButtonPressed(true);
 }
 
 void MainWindow::on_resizePhotosButton_Clicked()
@@ -126,14 +78,12 @@ void MainWindow::setUpDirectoryDisplays()
 
     sourceDirectoryValue = createDirectoryDisplayLab("sourceDirectoryValue");
     mwLayout->addWidget(sourceDirectoryValue, 0, Qt::AlignHCenter);
-    sourceDirectoryValue->setText(model->getSourceDirectory());
 
     targetDirectoryLabel = createNamedLabel("Target Directory", "targetDirectoryLabel");
     mwLayout->addWidget(targetDirectoryLabel, 0, Qt::AlignHCenter);
 
     targetDirectoryValue = createDirectoryDisplayLab("targetDirectoryValue");
     mwLayout->addWidget(targetDirectoryValue, 0, Qt::AlignHCenter);
-    targetDirectoryValue->setText(model->getTargetDirectory());
 }
 
 void MainWindow::setUpProgressDisplays()
@@ -151,18 +101,18 @@ void MainWindow::setUpProgressDisplays()
     filesToResizeVBoxLayout->addWidget(filesToResizeLabel, 0, Qt::AlignHCenter);
 
     filesToResizeLcdNumber = createAndConfigureLCD(
-        "filesToResizeLcdNumber", model->getPhotosToResizeCount());
+        "filesToResizeLcdNumber");
     filesToResizeVBoxLayout->addWidget(filesToResizeLcdNumber, 0, Qt::AlignHCenter);
 
     resizedPhotosLabel = createNamedLabel("Resized Photos","resizedPhotosLabel");
     resizePhotosVBoxLayout->addWidget(resizedPhotosLabel, 0, Qt::AlignHCenter);
 
     resizedPhotosLcdNumber = createAndConfigureLCD(
-        "resizedPhotosLcdNumber", model->getResizedPhotoCount());
+        "resizedPhotosLcdNumber");
     resizePhotosVBoxLayout->addWidget(resizedPhotosLcdNumber, 0, Qt::AlignHCenter);
 
     resizeProgressBar = createAndConfigureProgressBar(
-        "resizeProgressBar", model->getResizedPhotoCount());
+        "resizeProgressBar");
     mwLayout->addWidget(resizeProgressBar, 0, Qt::AlignHCenter);
 }
 
@@ -179,7 +129,7 @@ QLCDNumber *MainWindow::createAndConfigureLCD(const char *lcdName, const int ini
     lcd->setSegmentStyle(QLCDNumber::Flat);
     lcd->setDigitCount(lcdDigitCount);
     lcd->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    lcd->display(initValue);
+    lcd->display(0);
 
     return lcd;
 }

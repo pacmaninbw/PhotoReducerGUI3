@@ -1,8 +1,6 @@
 #ifndef MAINWINDOW_H_
 #define MAINWINDOW_H_
 
-#include "PhotoReducerModel.h"
-#include "OptionsDialog.h"
 #include <QVariant>
 #include <QApplication>
 #include <QHBoxLayout>
@@ -29,14 +27,15 @@ public:
     ~MainWindow();
 
 public slots:
-
-signals:
-
-private slots:
     void on_resizedPhotos_valueChanged(std::size_t value);
     void on_photosToResizeCount_ValueChanged(std::size_t photosToResize);
     void on_SourceDirectory_Changed(QString srcDir);
     void on_TargetDirectory_Changed(QString targetDir);
+
+signals:
+    void mainWindowOptionsButtonPressed(bool doINeedSignalContents);
+
+private slots:
     void on_optionsPushButton_Clicked();
     void on_resizePhotosButton_Clicked();
 
@@ -51,8 +50,6 @@ private:
     QLineEdit* createDirectoryDisplayLab(const char* labName);
     QPushButton* CreateNamedButton(const char* buttonText, const char* buttonName);
     QString generateWidthAndHeightStyleString(const int width, const int height);
-    void connectModelAndMainWindowSignalsToSlots();
-    void connectModelAndOptionsSignelsAndSlots(OptionsDialog* optionsDialog);
 /*
  * Size and positioning constants.
  */
@@ -66,7 +63,6 @@ private:
     const int progressBarHeight = 60;
     const int lcdDigitCount = 5;
 
-    PhotoReducerModel* model;
     QWidget* centralwidget;
     QVBoxLayout* mwLayout;
     QHBoxLayout* photoCountHBoxLayout;
