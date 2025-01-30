@@ -62,7 +62,8 @@ void PhotoReducerModel::setTargetDirectory(QString newTargetDir)
  */
 void PhotoReducerModel::initializeMainWindow()
 {
-
+    emit initializeMainWindowSourceDirectory(QString::fromStdString(sourceDirectory));
+    emit initializeMainWindowTargetDirectory(QString::fromStdString(targetDirectory));
 }
 
 void PhotoReducerModel::optionsSourceDirectoryEdited(QString newSrcDir)

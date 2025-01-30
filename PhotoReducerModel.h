@@ -35,6 +35,8 @@ signals:
     void photosToResizeCountValueChanged(std::size_t newValue);
     void sourceDirectoryValueChanged(QString newSrcDir);
     void targetDirectoryValueChanged(QString newTargetDir);
+    void initializeMainWindowSourceDirectory(QString newSrcDir);
+    void initializeMainWindowTargetDirectory(QString newTargetDir);
 
 
 private slots:

@@ -8,10 +8,10 @@ int main(int argc, char *argv[])
 
     PhotoReducerController controller("TheController");
     controller.createModel();
+    controller.connectControllerAndModelSignalsToSlots();
     controller.creatMainWindow();
     controller.connectModelAndMainWindowSignalsToSlots();
     controller.initMainWindowValuesAndShow();
-    controller.connectControllerAndModelSignalsToSlots();
     
     
     return theApp.exec();

@@ -21,6 +21,11 @@ void PhotoReducerController::creatMainWindow()
 
 void PhotoReducerController::connectModelAndMainWindowSignalsToSlots()
 {
+    connect(model, &PhotoReducerModel::initializeMainWindowSourceDirectory,
+        mainWindow, &MainWindow::on_SourceDirectory_Changed);
+    connect(model, &PhotoReducerModel::initializeMainWindowTargetDirectory,
+        mainWindow, &MainWindow::on_TargetDirectory_Changed);
+
     connect(model, &PhotoReducerModel::resizedPhotosCountValueChanged,
         mainWindow, &MainWindow::on_resizedPhotos_valueChanged);
     connect(model, &PhotoReducerModel::photosToResizeCountValueChanged,
@@ -40,6 +45,7 @@ void PhotoReducerController::connectControllerAndModelSignalsToSlots()
 
 void PhotoReducerController::initMainWindowValuesAndShow()
 {
+    emit mainWindowReadyForInitialization();
     mainWindow->show();
 }
 
