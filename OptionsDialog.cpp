@@ -1,4 +1,6 @@
+#include "createNamedQTWidget.h"
 #include "OptionsDialog.h"
+
 #include <QVariant>
 #include <QAbstractButton>
 #include <QApplication>
@@ -28,7 +30,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
         this, qOverload<>(&QDialog::reject));
 
     QMetaObject::connectSlotsByName(this);
-
 }
 
 OptionsDialog::~OptionsDialog()

@@ -6,6 +6,7 @@
  * Properly named slots can be easily connected to their signals.
  */
 
+class QWidget;
 /*
  * General Widget types.
  */

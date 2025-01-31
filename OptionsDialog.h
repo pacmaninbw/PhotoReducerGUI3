@@ -1,7 +1,6 @@
 #ifndef OPTIONSDIALOG_H_
 #define OPTIONSDIALOG_H_
 
-#include "PhotoReducerModel.h"
 #include <QVariant>
 #include <QAbstractButton>
 #include <QApplication>
@@ -15,8 +14,6 @@
 #include <QPushButton>
 #include <QString>
 #include <QVBoxLayout>
-// Position of the following include is important
-#include "createNamedQTWidget.h"
 
 class OptionsDialog : public QDialog
 {

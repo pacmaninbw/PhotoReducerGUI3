@@ -1,3 +1,4 @@
+#include "createNamedQTWidget.h"
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -118,9 +119,7 @@ void MainWindow::setUpProgressDisplays()
 
 QLCDNumber *MainWindow::createAndConfigureLCD(const char *lcdName, const int initValue)
 {
-    QLCDNumber* lcd = new QLCDNumber;
-
-    lcd->setObjectName(QString::fromUtf8(lcdName));
+    QLCDNumber* lcd = createNamedQTWidget<QLCDNumber>(lcdName);
 
     QString lcdStyle = generateWidthAndHeightStyleString(lcdWidth, lcdHeight);
     lcdStyle += " background-color: black; color: yellow;";
@@ -136,8 +135,7 @@ QLCDNumber *MainWindow::createAndConfigureLCD(const char *lcdName, const int ini
 
 QProgressBar *MainWindow::createAndConfigureProgressBar(const char* objectName, const int initValue)
 {
-    QProgressBar* progressBar = new QProgressBar(centralwidget);
-    progressBar->setObjectName(QString::fromUtf8(objectName));
+    QProgressBar* progressBar = createNamedQTWidget<QProgressBar>(objectName, centralwidget);
     progressBar->setRange(0, 200);
     progressBar->setValue(initValue);
 
@@ -158,10 +156,7 @@ int MainWindow::getLabelWidth(QLabel *lab)
 
 QLabel *MainWindow::createNamedLabel(const char *labText, const char *labName)
 {
-    QLabel* newLabel;
-
-    newLabel = new QLabel(labText, centralwidget);
-    newLabel->setObjectName(QString::fromUtf8(labName));
+    QLabel* newLabel = createNameQTWidgetWithText<QLabel>(labText, labName, centralwidget);
     newLabel->setStyleSheet(generateWidthAndHeightStyleString(getLabelWidth(newLabel), labelHeight));
     newLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
@@ -170,8 +165,7 @@ QLabel *MainWindow::createNamedLabel(const char *labText, const char *labName)
 
 QLineEdit* MainWindow::createDirectoryDisplayLab(const char *labName)
 {
-    QLineEdit* newDisplay = new QLineEdit(centralwidget);
-    newDisplay->setObjectName(QString::fromUtf8(labName));
+    QLineEdit* newDisplay = createNamedQTWidget<QLineEdit>(labName, centralwidget);
     newDisplay->setReadOnly(true);
 
     QString displayStyle = generateWidthAndHeightStyleString(maxOjectWidth, labelHeight);
@@ -184,9 +178,7 @@ QLineEdit* MainWindow::createDirectoryDisplayLab(const char *labName)
 
 QPushButton* MainWindow::CreateNamedButton(const char* buttonText, const char* buttonName)
 {
-    QPushButton* newButton = new QPushButton(buttonText, centralwidget);
-
-    newButton->setObjectName(QString::fromUtf8(buttonName));
+    QPushButton* newButton = createNameQTWidgetWithText<QPushButton>(buttonText, buttonName, centralwidget);
     newButton->setStyleSheet(generateWidthAndHeightStyleString(newButton->width(), buttonHeight));
 
     return newButton;
