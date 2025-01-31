@@ -33,6 +33,7 @@ public slots:
 
 signals:
     void mainWindowReadyForInitialization();
+    void optionDialogReadyForInitialization();
 
 
 private slots:
@@ -41,6 +42,8 @@ private slots:
 private:
     void createOptionsDialog();
     void connectModelAndOptionsDialogSignalsToSlots();
+    void connectOptionDialogOutToModelIn();
+    void connectModelOutToOptionDialogIn();
 
     PhotoReducerModel* model;
     MainWindow* mainWindow;

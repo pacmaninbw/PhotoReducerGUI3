@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     controller.connectControllerAndModelSignalsToSlots();
     controller.creatMainWindow();
     controller.connectModelAndMainWindowSignalsToSlots();
+    controller.connectControllerAndMainWindowSignalsToSlots();
     controller.initMainWindowValuesAndShow();
     
     

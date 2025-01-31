@@ -41,6 +41,8 @@ void PhotoReducerController::connectControllerAndModelSignalsToSlots()
 {
     connect(this, &PhotoReducerController::mainWindowReadyForInitialization,
         model, &PhotoReducerModel::initializeMainWindow);
+    connect(this, &PhotoReducerController::optionDialogReadyForInitialization,
+        model, &PhotoReducerModel::initializeOptionsDialog);
 }
 
 void PhotoReducerController::connectControllerAndMainWindowSignalsToSlots()
@@ -56,6 +58,12 @@ void PhotoReducerController::initMainWindowValuesAndShow()
 }
 
 void PhotoReducerController::connectModelAndOptionsDialogSignalsToSlots()
+{
+    connectOptionDialogOutToModelIn();
+    connectModelOutToOptionDialogIn();
+}
+
+void PhotoReducerController::connectOptionDialogOutToModelIn()
 {
     connect(optionsDialog, &OptionsDialog::sourceDirectoryLEChanged,
         model, &PhotoReducerModel::optionsSourceDirectoryEdited);
@@ -74,6 +82,14 @@ void PhotoReducerController::connectModelAndOptionsDialogSignalsToSlots()
         model, &PhotoReducerModel::optionsGoodFindFiles);
 }
 
+void PhotoReducerController::connectModelOutToOptionDialogIn()
+{
+    connect(model, &PhotoReducerModel::initializeOptionsDialogSourceDirectory,
+        optionsDialog, &OptionsDialog::initializeSourceDirectoryLE);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogTargetDirectory,
+        optionsDialog, &OptionsDialog::initializeTargetDirectoryLE);
+}
+
 /*
  * Signals.
  */
@@ -86,6 +102,8 @@ void PhotoReducerController::mainWindowOptionsButtonPressedCreateOptionsDialog(b
     optionsDialog = new OptionsDialog(mainWindow);
     optionsDialog->setObjectName("optionsDialog");
     connectModelAndOptionsDialogSignalsToSlots();
+    emit optionDialogReadyForInitialization();
+    optionsDialog->show();
 }
 
 
