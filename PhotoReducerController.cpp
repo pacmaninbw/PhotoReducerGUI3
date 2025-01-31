@@ -43,6 +43,12 @@ void PhotoReducerController::connectControllerAndModelSignalsToSlots()
         model, &PhotoReducerModel::initializeMainWindow);
 }
 
+void PhotoReducerController::connectControllerAndMainWindowSignalsToSlots()
+{
+    connect(mainWindow, &MainWindow::mainWindowOptionsButtonPressed, this,
+        &PhotoReducerController::mainWindowOptionsButtonPressedCreateOptionsDialog);
+}
+
 void PhotoReducerController::initMainWindowValuesAndShow()
 {
     emit mainWindowReadyForInitialization();

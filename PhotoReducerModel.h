@@ -25,6 +25,7 @@ public slots:
     void optionsOverWriteFilesChanged(bool checked) { overWriteFiles = checked; };
     void optionsGoodFindFiles(bool optionsGood);
     void initializeMainWindow();
+    void initializeOptionsDialog();
 /*
  * Photo options slots.
  */
@@ -37,6 +38,8 @@ signals:
     void targetDirectoryValueChanged(QString newTargetDir);
     void initializeMainWindowSourceDirectory(QString newSrcDir);
     void initializeMainWindowTargetDirectory(QString newTargetDir);
+    void initializeOptionsDialogSourceDirectory(QString newSrcDir);
+    void initializeOptionsDialogTargetDirectory(QString newTargetDir);
 
 
 private slots:

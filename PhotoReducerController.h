@@ -25,6 +25,7 @@ public:
     void creatMainWindow();
     void connectModelAndMainWindowSignalsToSlots();
     void connectControllerAndModelSignalsToSlots();
+    void connectControllerAndMainWindowSignalsToSlots();
     void initMainWindowValuesAndShow();
 
 public slots:
