@@ -15,3 +15,4 @@ A secondary goal is to be able to implement the Model View Controller design pat
  - C++ 23  
  - gcc 12  
  - QT 6.8  
+ - CMake
