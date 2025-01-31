@@ -40,7 +40,15 @@ signals:
     void initializeMainWindowTargetDirectory(QString newTargetDir);
     void initializeOptionsDialogSourceDirectory(QString newSrcDir);
     void initializeOptionsDialogTargetDirectory(QString newTargetDir);
-
+    void initializeOptionsDialogJPGFiles(bool checked);
+    void initializeOptionsDialogPNGFiles(bool checked);
+    void initializeOptionsDialogFixFileNames(bool checked);
+    void initializeOptionsDialogOverwrite(bool checked);
+    void initializeOptionsDialogMaxWidth(QString maxWidth);
+    void initializeOptionsDialogMaxHeight(QString maxHeight);
+    void initializeOptionsDialogScaleFactor(QString scaleFactor);
+    void initializeOptionsDialogMaintainRatio(bool checked);
+    void initializeOptionsDialogDispalyResized(bool checked);
 
 private slots:
 

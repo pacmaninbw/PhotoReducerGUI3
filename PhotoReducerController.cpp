@@ -88,6 +88,25 @@ void PhotoReducerController::connectModelOutToOptionDialogIn()
         optionsDialog, &OptionsDialog::initializeSourceDirectoryLE);
     connect(model, &PhotoReducerModel::initializeOptionsDialogTargetDirectory,
         optionsDialog, &OptionsDialog::initializeTargetDirectoryLE);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogJPGFiles,
+        optionsDialog, &OptionsDialog::initializeJPGFilesCB);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogPNGFiles,
+        optionsDialog, &OptionsDialog::initializePNGFilesCB);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogFixFileNames,
+        optionsDialog, &OptionsDialog::initializeFixFileNameCB);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogOverwrite,
+        optionsDialog, &OptionsDialog::initializeOverwriteCB);
+
+    connect(model, &PhotoReducerModel::initializeOptionsDialogMaxWidth,
+        optionsDialog, &OptionsDialog::initializeMaxWidthLE);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogMaxHeight,
+        optionsDialog, &OptionsDialog::initializeMaxHeightLE);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogScaleFactor,
+        optionsDialog, &OptionsDialog::initializeScaleFactorLE);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogMaintainRatio,
+        optionsDialog, &OptionsDialog::initializeMaintainRatioCB);
+    connect(model, &PhotoReducerModel::initializeOptionsDialogDispalyResized,
+        optionsDialog, &OptionsDialog::initializeDisplayResizedCB);
 }
 
 /*

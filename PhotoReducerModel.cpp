@@ -70,6 +70,16 @@ void PhotoReducerModel::initializeOptionsDialog()
 {
     emit initializeOptionsDialogSourceDirectory(QString::fromStdString(sourceDirectory));
     emit initializeOptionsDialogTargetDirectory(QString::fromStdString(targetDirectory));
+    emit initializeOptionsDialogJPGFiles(processJPGFiles);
+    emit initializeOptionsDialogPNGFiles(processJPGFiles);
+    emit initializeOptionsDialogFixFileNames(fixFileName);
+    emit initializeOptionsDialogOverwrite(overWriteFiles);
+    emit initializeOptionsDialogMaxWidth(QString::number(maxWidth));
+    emit initializeOptionsDialogMaxHeight(QString::number(maxHeight));
+    emit initializeOptionsDialogScaleFactor(QString::number(scaleFactor));
+    emit initializeOptionsDialogMaintainRatio(maintainRatio);
+    emit initializeOptionsDialogDispalyResized(displayResized);
+
 }
 
 void PhotoReducerModel::optionsSourceDirectoryEdited(QString newSrcDir)

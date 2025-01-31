@@ -28,6 +28,18 @@ public slots:
         { sourceDirectoryLineEdit->setText(newSrcDir); };
     void initializeTargetDirectoryLE(QString newTargetDir)
         { targetDirectoryLineEdit->setText(newTargetDir); };
+    void initializeJPGFilesCB(bool checked) { JPGFileTypeCheckBox->setChecked(checked); };
+    void initializePNGFilesCB(bool checked) { PNGFileTypecheckBox->setChecked(checked); };
+    void initializeFixFileNameCB(bool checked) { fixFileNameCheckBox->setChecked(checked); };
+    void initializeOverwriteCB(bool checked) { overwriteCheckBox->setChecked(checked); };
+    void initializeMaxWidthLE(QString width) { maxWidthLineEdit->setText(width); };
+    void initializeMaxHeightLE(QString height) { maxHeightLineEdit->setText(height); };
+    void initializeScaleFactorLE(QString scaleFactor)
+        { scaleFactorLineEdit->setText(scaleFactor); };
+    void initializeMaintainRatioCB(bool checked)
+        { maintainRatioCheckBox->setChecked(checked); };
+    void initializeDisplayResizedCB(bool checked)
+        { displayResizedCheckBox->setChecked(checked); };
 
 signals:
     void sourceDirectoryLEChanged(QString newSrcDir);
