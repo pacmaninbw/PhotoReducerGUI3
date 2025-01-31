@@ -77,19 +77,6 @@ void OptionsDialog::on_optionsButtonBox_accepted()
 
     emit optionsDoneFindPhotoFiles(hasNoErrors);
 
-#if 0
-    updateModelFileOptions();
-
-    if (updateModelPhotoOptions())
-    {
-        hasErrors = true;
-    }
-
-    if (hasErrors)
-    {
-        showErrorMessages();
-    }
-#endif
 }
 
 void OptionsDialog::setUpOtionsDialogUI()
@@ -121,21 +108,21 @@ QGroupBox* OptionsDialog::setUpPhotoOptionGroupBox()
     QFormLayout* photoOptionsLayout =
         createNamedFormLayoutWithPolicy("photoOptionsLayout");
 
-    maintainRatioCheckBox = createNamedCheckBox(
-        "Maintain Ratio", "maintainRatioCheckBox");
+    maintainRatioCheckBox = createNameQTWidgetWithText<QCheckBox>(
+        "Maintain Ratio", "maintainRatioCheckBox", this);
     photoOptionsLayout->addRow(maintainRatioCheckBox);
 
-    displayResizedCheckBox = createNamedCheckBox(
-        "Display Resized Photo", "displayResizedCheckBox");
+    displayResizedCheckBox = createNameQTWidgetWithText<QCheckBox>(
+        "Display Resized Photo", "displayResizedCheckBox", this);
     photoOptionsLayout->addRow(displayResizedCheckBox);
 
-    maxWidthLineEdit = createNamedLineItem("maxWidthLineEdit");
+    maxWidthLineEdit = createNamedQTWidget<QLineEdit>("maxWidthLineEdit", this);
     photoOptionsLayout->addRow("Maximum Photo Width", maxWidthLineEdit);
 
-    maxHeightLineEdit = createNamedLineItem("maxHeightLineEdit");
+    maxHeightLineEdit = createNamedQTWidget<QLineEdit>("maxHeightLineEdit", this);
     photoOptionsLayout->addRow("Maximum Photo Height", maxHeightLineEdit);
 
-    scaleFactorLineEdit = createNamedLineItem("scaleFactorLineEdit");
+    scaleFactorLineEdit = createNamedQTWidget<QLineEdit>("scaleFactorLineEdit", this);
     photoOptionsLayout->addRow("Scale Factor", scaleFactorLineEdit);
 
     photoOptionsBox->setLayout(photoOptionsLayout);
@@ -160,22 +147,26 @@ QGroupBox* OptionsDialog::setUpFileGroupBox()
     QFormLayout* fileAndDirectorylayout = createNamedFormLayoutWithPolicy(
         "fileAndDirectorylayout");
 
-    JPGFileTypeCheckBox = createNamedCheckBox("JPG files", "JPGFileTypeCheckBox");
+    JPGFileTypeCheckBox = createNameQTWidgetWithText<QCheckBox>(
+        "JPG files", "JPGFileTypeCheckBox", this);
     fileAndDirectorylayout->addRow(JPGFileTypeCheckBox);
 
-    PNGFileTypecheckBox = createNamedCheckBox("PNG Files", "PNGFileTypecheckBox");
+    PNGFileTypecheckBox = createNameQTWidgetWithText<QCheckBox>(
+        "PNG Files", "PNGFileTypecheckBox", this);
     fileAndDirectorylayout->addRow(PNGFileTypecheckBox);
 
-    fixFileNameCheckBox = createNamedCheckBox("Safe Web Name", "fixFileNameCheckBox");
+    fixFileNameCheckBox = createNameQTWidgetWithText<QCheckBox>(
+        "Safe Web Name", "fixFileNameCheckBox", this);
     fileAndDirectorylayout->addRow(fixFileNameCheckBox);
 
-    overwriteCheckBox = createNamedCheckBox("Overwrite Existing Files", "overwriteCheckBox");
+    overwriteCheckBox = createNameQTWidgetWithText<QCheckBox>(
+        "Overwrite Existing Files", "overwriteCheckBox", this);
     fileAndDirectorylayout->addRow(overwriteCheckBox);
     
     fileAndDirectorylayout->addRow("Source Directory", layOutSourceDirectory());
     fileAndDirectorylayout->addRow("Target Directory", layOutTargetDirectory());
 
-    addExtensionLineEdit = createNamedLineItem("addExtensionLineEdit");
+    addExtensionLineEdit = createNamedQTWidget<QLineEdit>("addExtensionLineEdit", this);
     fileAndDirectorylayout->addRow("Add Extension", addExtensionLineEdit);
 
     fileAndDirectoryGroupBox = new QGroupBox("File Type and Directory Options", this);
@@ -184,35 +175,9 @@ QGroupBox* OptionsDialog::setUpFileGroupBox()
     return fileAndDirectoryGroupBox;
 }
 
-QCheckBox* OptionsDialog::createNamedCheckBox(const QString &boxText, const char* newObjectName)
-{
-    QCheckBox* newCheckBox = new QCheckBox(boxText, this);
-    newCheckBox->setObjectName(QString::fromUtf8(newObjectName));
-
-    return newCheckBox;
-}
-
-QPushButton* OptionsDialog::createNamedButton(const QString &buttonText, const char *buttonName)
-{
-    QPushButton* newbutton = new QPushButton(buttonText, this);
-    newbutton->setObjectName(QString::fromUtf8(buttonName));
-
-    return newbutton;
-}
-
-QLineEdit* OptionsDialog::createNamedLineItem(const char *objectName, bool readOnly)
-{
-    QLineEdit* newLineEdit = new QLineEdit(this);
-    newLineEdit->setObjectName(QString::fromUtf8(objectName));
-    newLineEdit->setReadOnly(readOnly);
-
-    return newLineEdit;
-}
-
 QFormLayout* OptionsDialog::createNamedFormLayoutWithPolicy(const char *formName)
 {
-    QFormLayout* newFormLayout = new QFormLayout;
-    newFormLayout->setObjectName(QString::fromUtf8(formName));
+    QFormLayout* newFormLayout = createNamedQTWidget<QFormLayout>(formName);
     newFormLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
 
     return newFormLayout;
@@ -223,10 +188,12 @@ QHBoxLayout *OptionsDialog::layOutSourceDirectory()
     QHBoxLayout *srcDirLayout = new QHBoxLayout;
     srcDirLayout->setObjectName("srcDirLayout");
 
-    sourceDirectoryLineEdit = createNamedLineItem("sourceDirectoryLineEdit", true);
+    sourceDirectoryLineEdit = createNamedQTWidget<QLineEdit>("sourceDirectoryLineEdit", this);
+    sourceDirectoryLineEdit->setReadOnly(true);
     srcDirLayout->addWidget(sourceDirectoryLineEdit);
 
-    sourceDirBrowsePushButton = createNamedButton("Browse", "sourceDirBrowsePushButton");
+    sourceDirBrowsePushButton = createNameQTWidgetWithText<QPushButton>(
+        "Browse", "sourceDirBrowsePushButton", this);
     srcDirLayout->addWidget(sourceDirBrowsePushButton);
 
     return srcDirLayout;
@@ -237,9 +204,10 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
     QHBoxLayout *targetDirLayout = new QHBoxLayout();
     targetDirLayout->setObjectName("targetDirLayout");
 
-    targetDirectoryLineEdit = createNamedLineItem("targetDirectoryLineEdit", true);
-    targetDirectoryBrowsePushButton = createNamedButton(
-        "Browse", "targetDirectoryBrowsePushButton");
+    targetDirectoryLineEdit = createNamedQTWidget<QLineEdit>("targetDirectoryLineEdit", this);
+    targetDirectoryLineEdit->setReadOnly(true);
+    targetDirectoryBrowsePushButton = createNameQTWidgetWithText<QPushButton>(
+        "Browse", "targetDirectoryBrowsePushButton", this);
 
     targetDirLayout->addWidget(targetDirectoryLineEdit);
     targetDirLayout->addWidget(targetDirectoryBrowsePushButton);

@@ -15,6 +15,8 @@
 #include <QPushButton>
 #include <QString>
 #include <QVBoxLayout>
+// Position of the following include is important
+#include "createNamedQTWidget.h"
 
 class OptionsDialog : public QDialog
 {
@@ -25,6 +27,10 @@ public:
     ~OptionsDialog();
 
 public slots:
+    void initializeSourceDirectoryLE(QString newSrcDir)
+        { sourceDirectoryLineEdit->setText(newSrcDir); };
+    void initializeTargetDirectoryLE(QString newTargetDir)
+        { targetDirectoryLineEdit->setText(newTargetDir); };
 
 signals:
     void sourceDirectoryLEChanged(QString newSrcDir);
@@ -50,14 +56,7 @@ private:
     QGroupBox* setUpFileGroupBox();
     QGroupBox* setUpPhotoOptionGroupBox();
     QDialogButtonBox* setrUpOptionsButtonBox();
-/*
- * Name all widgets so that the MetaObject connect works.
- */
-    QCheckBox* createNamedCheckBox(const QString &boxText, const char* objectName);
-    QPushButton* createNamedButton(const QString &buttonText, const char* buttonName);
-    QLineEdit* createNamedLineItem(const char* objectName, bool readOnly = false);
-    QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);
-    
+    QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);    
     QHBoxLayout* layOutSourceDirectory();
     QHBoxLayout* layOutTargetDirectory();
 

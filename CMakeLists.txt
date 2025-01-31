@@ -25,6 +25,7 @@ set(PROJECT_SOURCES
 	    PhotoReducerModel.cpp
         PhotoReducerController.cpp
         PhotoReducerController.h
+        createNamedQTWidget.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
