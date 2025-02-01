@@ -22,7 +22,7 @@ set(PROJECT_SOURCES
         OptionsDialog.cpp 
         OptionsDialog.h
     	PhotoReducerModel.h
-	    PhotoReducerModel.cpp
+        PhotoReducerModel.cpp
         PhotoReducerController.cpp
         PhotoReducerController.h
         createNamedQTWidget.h
