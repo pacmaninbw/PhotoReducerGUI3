@@ -57,28 +57,42 @@ void PhotoReducerModel::setTargetDirectory(QString newTargetDir)
     }
 }
 
+int PhotoReducerModel::qstringToInt(QString possibleNumber)
+{
+    int output = 0;
+    bool ok;
+
+    output = static_cast<std::size_t>(possibleNumber.toInt(&ok, 10));
+    if (!ok)
+    {
+        output = -1;
+    }
+
+    return output;
+}
+
 /*
  * Slots
  */
 void PhotoReducerModel::initializeMainWindow()
 {
-    emit initializeMainWindowSourceDirectory(QString::fromStdString(sourceDirectory));
-    emit initializeMainWindowTargetDirectory(QString::fromStdString(targetDirectory));
+    emit initMainWindowSourceDirectory(QString::fromStdString(sourceDirectory));
+    emit initMainWindowTargetDirectory(QString::fromStdString(targetDirectory));
 }
 
 void PhotoReducerModel::initializeOptionsDialog()
 {
-    emit initializeOptionsDialogSourceDirectory(QString::fromStdString(sourceDirectory));
-    emit initializeOptionsDialogTargetDirectory(QString::fromStdString(targetDirectory));
-    emit initializeOptionsDialogJPGFiles(processJPGFiles);
-    emit initializeOptionsDialogPNGFiles(processJPGFiles);
-    emit initializeOptionsDialogFixFileNames(fixFileName);
-    emit initializeOptionsDialogOverwrite(overWriteFiles);
-    emit initializeOptionsDialogMaxWidth(QString::number(maxWidth));
-    emit initializeOptionsDialogMaxHeight(QString::number(maxHeight));
-    emit initializeOptionsDialogScaleFactor(QString::number(scaleFactor));
-    emit initializeOptionsDialogMaintainRatio(maintainRatio);
-    emit initializeOptionsDialogDispalyResized(displayResized);
+    emit initOptionsSourceDirectory(QString::fromStdString(sourceDirectory));
+    emit initOptionsTargetDirectory(QString::fromStdString(targetDirectory));
+    emit initOptionsJPGFiles(processJPGFiles);
+    emit initOptionsPNGFiles(processJPGFiles);
+    emit initOptionsFixFileNames(fixFileName);
+    emit initOptionsOverwrite(overWriteFiles);
+    emit initOptionsMaxWidth(QString::number(maxWidth));
+    emit initOptionsMaxHeight(QString::number(maxHeight));
+    emit initOptionsScaleFactor(QString::number(scaleFactor));
+    emit initOptionsMaintainRatio(maintainRatio);
+    emit initOptionsDispalyResized(displayResized);
 
 }
 
@@ -90,6 +104,57 @@ void PhotoReducerModel::optionsSourceDirectoryEdited(QString newSrcDir)
 void PhotoReducerModel::optionsTargetDirectoryEdited(QString newTargetDir)
 {
     setTargetDirectory(newTargetDir);
+}
+
+void PhotoReducerModel::optionsMaxWidthChanged(QString maxWidthQS)
+{
+    if (!maxWidthQS.isEmpty())
+    {
+        int width = qstringToInt(maxWidthQS);
+        if (width > 0)
+        {
+            maxWidth = width;
+            emit clearOptionsWidthError(true);
+        }
+        else
+        {
+            emit optionsDialogMaxWidthError(
+                "Max Height must be an integer value greater than zero!");
+        }
+    }
+}
+
+void PhotoReducerModel::optionsMaxHeightChanged(QString maxHeightQS)
+{
+    if (!maxHeightQS.isEmpty())
+    {
+        int height = qstringToInt(maxHeightQS);
+        if (height > 0)
+        {
+            maxHeight = height;
+            emit clearOptionsHeightError(true);
+        }
+        else
+        {
+            emit optionsDialogMaxHeightError(
+                "Max Width must be an integer value greater than zero!");
+        }
+    }
+}
+
+void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
+{
+    if (!scaleFactorQS.isEmpty())
+    {
+        int testscaleFactor = qstringToInt(scaleFactorQS);
+        if (testscaleFactor > 20 && testscaleFactor < 90)
+        {
+            scaleFactor = testscaleFactor;
+            emit clearOptionsScaleFactorError(true);
+        }
+        emit optionsDialogScaleFactorError("Scale Factor must be an integer value"
+            " greater than 20 and less than 90!");
+    }
 }
 
 void PhotoReducerModel::optionsGoodFindFiles(bool optionsGood)

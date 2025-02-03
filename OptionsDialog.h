@@ -11,6 +11,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QString>
 #include <QVBoxLayout>
@@ -40,6 +41,12 @@ public slots:
         { maintainRatioCheckBox->setChecked(checked); };
     void initializeDisplayResizedCB(bool checked)
         { displayResizedCheckBox->setChecked(checked); };
+    void onMaxWidthError(QString eMsg) { handelLineEditError(eMsg, maxWidthLineEdit); };
+    void onMaxHeightError(QString eMsg) { handelLineEditError(eMsg, maxHeightLineEdit); };
+    void onScaleFactorError(QString eMsg) { handelLineEditError(eMsg, scaleFactorLineEdit); };
+    void onClearWidthError(bool good) { clearErrorLineEdit(maxWidthLineEdit); };
+    void onClearHeightError(bool good) { clearErrorLineEdit(maxHeightLineEdit); };
+    void onClearScaleFactorError(bool good) { clearErrorLineEdit(scaleFactorLineEdit); };
 
 signals:
     void sourceDirectoryLEChanged(QString newSrcDir);
@@ -50,24 +57,36 @@ signals:
     void optionsSafeWebNameCheckBoxChanged(bool checked);
     void optionsOverwriteCheckBoxChanged(bool checked);
     void optionsaddExtensionLEChanged(QString newExtension);
-
+    void optionsMaintainRatioCBChanged(bool checked);
+    void optionsDisplayResizedCBChanged(bool checked);
+    void optionsMaxWidthLEChanged(QString maxWidthQS);
+    void optionsMaxHeightLEChanged(QString maxHeightQS);
+    void optionsScaleFactorLEChanged(QString scaleFactorQS);
 
 private slots:
+//    void on_JPGFileTypeCheckBox_checkStateChanged(int checked) { emit optionsJPGFileTypeCheckBoxChanged(checked); };
     void on_sourceDirBrowsePushButton_clicked();
     void on_targetDirectoryLineEdit_textChanged();
     void on_sourceDirectoryLineEdit_textChanged();
     void on_targetDirectoryBrowsePushButton_clicked();
     void on_addExtensionLineEdit_editingFinished();
+    void on_maxWidthLineEdit_editingFinished() { emit optionsMaxWidthLEChanged(maxWidthLineEdit->text()); };
+    void on_maxHeightLineEdit_editingFinished() { emit optionsMaxHeightLEChanged(maxHeightLineEdit->text()); };
+    void on_scaleFactorLineEdit_editingFinished() { emit optionsScaleFactorLEChanged(scaleFactorLineEdit->text()); };
     void on_optionsButtonBox_accepted();
 
 private:
     void setUpOtionsDialogUI();
     QGroupBox* setUpFileGroupBox();
+    void connectFileGroupCheckBoxes();
+    void connectPhotoGroupCheckBoxes();
     QGroupBox* setUpPhotoOptionGroupBox();
     QDialogButtonBox* setrUpOptionsButtonBox();
     QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);    
     QHBoxLayout* layOutSourceDirectory();
     QHBoxLayout* layOutTargetDirectory();
+    void handelLineEditError(QString eMsg, QLineEdit* badLineEdit);
+    void clearErrorLineEdit(QLineEdit* correctedLineEdit);
 
     QGroupBox* fileAndDirectoryGroupBox;
     QCheckBox* JPGFileTypeCheckBox;

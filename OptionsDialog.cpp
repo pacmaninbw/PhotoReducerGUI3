@@ -13,6 +13,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QString>
 
@@ -28,6 +29,9 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
         
     QObject::connect(optionsButtonBox, &QDialogButtonBox::rejected,
         this, qOverload<>(&QDialog::reject));
+
+    connectFileGroupCheckBoxes();
+    connectPhotoGroupCheckBoxes();
 
     QMetaObject::connectSlotsByName(this);
 }
@@ -131,6 +135,20 @@ QGroupBox* OptionsDialog::setUpPhotoOptionGroupBox()
     return photoOptionsBox;
 }
 
+void OptionsDialog::connectPhotoGroupCheckBoxes()
+{
+    connect(maintainRatioCheckBox, &QCheckBox::toggled, [this]()
+        {
+            emit optionsMaintainRatioCBChanged(maintainRatioCheckBox->isChecked());
+        }
+    );
+    connect(displayResizedCheckBox, &QCheckBox::toggled, [this]()
+        {
+            emit optionsDisplayResizedCBChanged(displayResizedCheckBox->isChecked());
+        }
+    );
+}
+
 QDialogButtonBox *OptionsDialog::setrUpOptionsButtonBox()
 {
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
@@ -176,6 +194,30 @@ QGroupBox* OptionsDialog::setUpFileGroupBox()
     return fileAndDirectoryGroupBox;
 }
 
+void OptionsDialog::connectFileGroupCheckBoxes()
+{
+    connect(JPGFileTypeCheckBox, &QCheckBox::toggled, [this]()
+        {
+            emit optionsJPGFileTypeCheckBoxChanged(JPGFileTypeCheckBox->isChecked());
+        }
+    );
+    connect(PNGFileTypecheckBox, &QCheckBox::toggled, [this]()
+        {
+            emit optionsPNGFileTypecheckBoxChanged(PNGFileTypecheckBox->isChecked());
+        }
+    );
+    connect(fixFileNameCheckBox, &QCheckBox::toggled, [this]()
+        {
+            emit optionsSafeWebNameCheckBoxChanged(fixFileNameCheckBox->isChecked());
+        }
+    );
+    connect(overwriteCheckBox, &QCheckBox::toggled, [this]()
+        {
+            emit optionsOverwriteCheckBoxChanged(overwriteCheckBox->isChecked());
+        }
+    );
+}
+
 QFormLayout* OptionsDialog::createNamedFormLayoutWithPolicy(const char *formName)
 {
     QFormLayout* newFormLayout = createNamedQTWidget<QFormLayout>(formName);
@@ -215,3 +257,18 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
 
     return targetDirLayout;
 }
+
+void OptionsDialog::handelLineEditError(QString eMsg, QLineEdit *badLineEdit)
+{
+    QMessageBox errorMessageBox;
+    errorMessageBox.critical(0,"Error:", eMsg);
+    errorMessageBox.setFixedSize(500,200);
+    badLineEdit->setStyleSheet("background-color: yellow;");
+    optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+}
+
+void OptionsDialog::clearErrorLineEdit(QLineEdit *correctedLineEdit)
+{
+    correctedLineEdit->setStyleSheet("background-color: white;");
+}
+

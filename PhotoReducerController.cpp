@@ -21,9 +21,9 @@ void PhotoReducerController::creatMainWindow()
 
 void PhotoReducerController::connectModelAndMainWindowSignalsToSlots()
 {
-    connect(model, &PhotoReducerModel::initializeMainWindowSourceDirectory,
+    connect(model, &PhotoReducerModel::initMainWindowSourceDirectory,
         mainWindow, &MainWindow::on_SourceDirectory_Changed);
-    connect(model, &PhotoReducerModel::initializeMainWindowTargetDirectory,
+    connect(model, &PhotoReducerModel::initMainWindowTargetDirectory,
         mainWindow, &MainWindow::on_TargetDirectory_Changed);
 
     connect(model, &PhotoReducerModel::resizedPhotosCountValueChanged,
@@ -65,6 +65,7 @@ void PhotoReducerController::connectModelAndOptionsDialogSignalsToSlots()
 
 void PhotoReducerController::connectOptionDialogOutToModelIn()
 {
+    // File Options
     connect(optionsDialog, &OptionsDialog::sourceDirectoryLEChanged,
         model, &PhotoReducerModel::optionsSourceDirectoryEdited);
     connect(optionsDialog, &OptionsDialog::targetDirectoryLEChanged,
@@ -78,40 +79,44 @@ void PhotoReducerController::connectOptionDialogOutToModelIn()
     connect(optionsDialog, &OptionsDialog::optionsOverwriteCheckBoxChanged,
         model, &PhotoReducerModel::optionsOverWriteFilesChanged);
 
+    // Photo Options
+    connect(optionsDialog, &OptionsDialog::optionsMaintainRatioCBChanged,
+        model, &PhotoReducerModel::optionsMaintainRatioChanged);
+    connect(optionsDialog, &OptionsDialog::optionsDisplayResizedCBChanged,
+        model, &PhotoReducerModel::optionsDisplayResizedChanged);
+    connect(optionsDialog, &OptionsDialog::optionsMaxWidthLEChanged,
+        model, &PhotoReducerModel::optionsMaxWidthChanged);
+    connect(optionsDialog, &OptionsDialog::optionsMaxHeightLEChanged,
+        model, &PhotoReducerModel::optionsMaxHeightChanged);
+    connect(optionsDialog, &OptionsDialog::optionsScaleFactorLEChanged,
+        model, &PhotoReducerModel::optionsScaleFactorChanged);
+
     connect(optionsDialog, &OptionsDialog::optionsDoneFindPhotoFiles,
         model, &PhotoReducerModel::optionsGoodFindFiles);
 }
 
 void PhotoReducerController::connectModelOutToOptionDialogIn()
 {
-    connect(model, &PhotoReducerModel::initializeOptionsDialogSourceDirectory,
-        optionsDialog, &OptionsDialog::initializeSourceDirectoryLE);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogTargetDirectory,
-        optionsDialog, &OptionsDialog::initializeTargetDirectoryLE);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogJPGFiles,
-        optionsDialog, &OptionsDialog::initializeJPGFilesCB);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogPNGFiles,
-        optionsDialog, &OptionsDialog::initializePNGFilesCB);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogFixFileNames,
-        optionsDialog, &OptionsDialog::initializeFixFileNameCB);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogOverwrite,
-        optionsDialog, &OptionsDialog::initializeOverwriteCB);
+    connect(model, &PhotoReducerModel::initOptionsSourceDirectory, optionsDialog, &OptionsDialog::initializeSourceDirectoryLE);
+    connect(model, &PhotoReducerModel::initOptionsTargetDirectory, optionsDialog, &OptionsDialog::initializeTargetDirectoryLE);
+    connect(model, &PhotoReducerModel::initOptionsJPGFiles, optionsDialog, &OptionsDialog::initializeJPGFilesCB);
+    connect(model, &PhotoReducerModel::initOptionsPNGFiles, optionsDialog, &OptionsDialog::initializePNGFilesCB);
+    connect(model, &PhotoReducerModel::initOptionsFixFileNames, optionsDialog, &OptionsDialog::initializeFixFileNameCB);
+    connect(model, &PhotoReducerModel::initOptionsOverwrite, optionsDialog, &OptionsDialog::initializeOverwriteCB);
 
-    connect(model, &PhotoReducerModel::initializeOptionsDialogMaxWidth,
-        optionsDialog, &OptionsDialog::initializeMaxWidthLE);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogMaxHeight,
-        optionsDialog, &OptionsDialog::initializeMaxHeightLE);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogScaleFactor,
-        optionsDialog, &OptionsDialog::initializeScaleFactorLE);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogMaintainRatio,
-        optionsDialog, &OptionsDialog::initializeMaintainRatioCB);
-    connect(model, &PhotoReducerModel::initializeOptionsDialogDispalyResized,
-        optionsDialog, &OptionsDialog::initializeDisplayResizedCB);
+    connect(model, &PhotoReducerModel::initOptionsMaxWidth, optionsDialog, &OptionsDialog::initializeMaxWidthLE);
+    connect(model, &PhotoReducerModel::initOptionsMaxHeight, optionsDialog, &OptionsDialog::initializeMaxHeightLE);
+    connect(model, &PhotoReducerModel::initOptionsScaleFactor, optionsDialog, &OptionsDialog::initializeScaleFactorLE);
+    connect(model, &PhotoReducerModel::initOptionsMaintainRatio, optionsDialog, &OptionsDialog::initializeMaintainRatioCB);
+    connect(model, &PhotoReducerModel::initOptionsDispalyResized, optionsDialog, &OptionsDialog::initializeDisplayResizedCB);
+
+    connect(model, &PhotoReducerModel::optionsDialogMaxWidthError, optionsDialog, &OptionsDialog::onMaxWidthError);
+    connect(model, &PhotoReducerModel::optionsDialogMaxHeightError, optionsDialog, &OptionsDialog::onMaxHeightError);
+    connect(model, &PhotoReducerModel::optionsDialogScaleFactorError, optionsDialog, &OptionsDialog::onScaleFactorError);
+    connect(model, &PhotoReducerModel::clearOptionsWidthError, optionsDialog, &OptionsDialog::onClearWidthError);
+    connect(model, &PhotoReducerModel::clearOptionsHeightError, optionsDialog, &OptionsDialog::onClearHeightError);
+    connect(model, &PhotoReducerModel::clearOptionsScaleFactorError, optionsDialog, &OptionsDialog::onClearScaleFactorError);
 }
-
-/*
- * Signals.
- */
 
 /*
  * Slots

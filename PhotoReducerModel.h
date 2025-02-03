@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <string>
+#include <vector>
 
 class PhotoReducerModel : public QObject
 {
@@ -14,6 +15,8 @@ public:
     ~PhotoReducerModel() = default;
 
 public slots:
+    void initializeMainWindow();
+    void initializeOptionsDialog();
 /*
  * File options slots.
  */
@@ -24,11 +27,14 @@ public slots:
     void optionsSafeWebNameChanged(bool checked) { fixFileName = checked; };
     void optionsOverWriteFilesChanged(bool checked) { overWriteFiles = checked; };
     void optionsGoodFindFiles(bool optionsGood);
-    void initializeMainWindow();
-    void initializeOptionsDialog();
 /*
  * Photo options slots.
  */
+    void optionsMaxWidthChanged(QString maxWidthQS);
+    void optionsMaxHeightChanged(QString maxHeightQS);
+    void optionsScaleFactorChanged(QString scaleFactorQS);
+    void optionsMaintainRatioChanged(bool checked) { maintainRatio = checked; };
+    void optionsDisplayResizedChanged(bool checked) { displayResized = checked; };
     
 
 signals:
@@ -36,19 +42,27 @@ signals:
     void photosToResizeCountValueChanged(std::size_t newValue);
     void sourceDirectoryValueChanged(QString newSrcDir);
     void targetDirectoryValueChanged(QString newTargetDir);
-    void initializeMainWindowSourceDirectory(QString newSrcDir);
-    void initializeMainWindowTargetDirectory(QString newTargetDir);
-    void initializeOptionsDialogSourceDirectory(QString newSrcDir);
-    void initializeOptionsDialogTargetDirectory(QString newTargetDir);
-    void initializeOptionsDialogJPGFiles(bool checked);
-    void initializeOptionsDialogPNGFiles(bool checked);
-    void initializeOptionsDialogFixFileNames(bool checked);
-    void initializeOptionsDialogOverwrite(bool checked);
-    void initializeOptionsDialogMaxWidth(QString maxWidth);
-    void initializeOptionsDialogMaxHeight(QString maxHeight);
-    void initializeOptionsDialogScaleFactor(QString scaleFactor);
-    void initializeOptionsDialogMaintainRatio(bool checked);
-    void initializeOptionsDialogDispalyResized(bool checked);
+    void initMainWindowSourceDirectory(QString newSrcDir);
+    void initMainWindowTargetDirectory(QString newTargetDir);
+    void initOptionsSourceDirectory(QString newSrcDir);
+    void initOptionsTargetDirectory(QString newTargetDir);
+    void initOptionsJPGFiles(bool checked);
+    void initOptionsPNGFiles(bool checked);
+    void initOptionsFixFileNames(bool checked);
+    void initOptionsOverwrite(bool checked);
+    void initOptionsMaxWidth(QString maxWidth);
+    void initOptionsMaxHeight(QString maxHeight);
+    void initOptionsScaleFactor(QString scaleFactor);
+    void initOptionsMaintainRatio(bool checked);
+    void initOptionsDispalyResized(bool checked);
+    void optionsDialogMaxWidthError(QString eMsg);
+    void optionsDialogMaxHeightError(QString eMsg);
+    void optionsDialogScaleFactorError(QString eMsg);
+    void optionsDialogMaintainRatioError(QString eMsg);
+    void optionsDialogAttemptedOverwrite(QString eMsg);
+    void clearOptionsWidthError(bool good);
+    void clearOptionsHeightError(bool good);
+    void clearOptionsScaleFactorError(bool good);
 
 private slots:
 
@@ -59,6 +73,7 @@ private:
     void setPhotosToResizeCount(std::size_t newValue);
     void setSourceDirectory(QString newSrcDir);
     void setTargetDirectory(QString newTargetDir);
+    int qstringToInt(QString possibleNumber);
     
     std::size_t resizedPhotosCount;
     std::size_t photosToResizeCount;
