@@ -152,8 +152,11 @@ void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
             scaleFactor = testscaleFactor;
             emit clearOptionsScaleFactorError(true);
         }
-        emit optionsDialogScaleFactorError("Scale Factor must be an integer value"
-            " greater than 20 and less than 90!");
+        else
+        {
+            emit optionsDialogScaleFactorError("Scale Factor must be an integer value"
+                " greater than 20 and less than 90!");
+        }
     }
 }
 
