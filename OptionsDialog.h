@@ -11,7 +11,6 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
-#include <QMessageBox>
 #include <QPushButton>
 #include <QString>
 #include <QVBoxLayout>
@@ -64,7 +63,6 @@ signals:
     void optionsScaleFactorLEChanged(QString scaleFactorQS);
 
 private slots:
-//    void on_JPGFileTypeCheckBox_checkStateChanged(int checked) { emit optionsJPGFileTypeCheckBoxChanged(checked); };
     void on_sourceDirBrowsePushButton_clicked();
     void on_targetDirectoryLineEdit_textChanged();
     void on_sourceDirectoryLineEdit_textChanged();
