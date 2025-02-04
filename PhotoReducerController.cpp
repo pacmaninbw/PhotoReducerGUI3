@@ -63,6 +63,13 @@ void PhotoReducerController::connectModelAndOptionsDialogSignalsToSlots()
     connectModelOutToOptionDialogIn();
 }
 
+/*
+ * Please pardon the massive amount of code repetition in these functions.
+ * I tried creating tables of signals and slots by examining the contents
+ * of the QObject header file and using a declaration I found there,
+ * unfortunately signals and slots are only partially implemented at
+ * compile time and it generated compilation errors.
+ */
 void PhotoReducerController::connectOptionDialogOutToModelIn()
 {
     // File Options
@@ -78,6 +85,8 @@ void PhotoReducerController::connectOptionDialogOutToModelIn()
         model, &PhotoReducerModel::optionsSafeWebNameChanged);
     connect(optionsDialog, &OptionsDialog::optionsOverwriteCheckBoxChanged,
         model, &PhotoReducerModel::optionsOverWriteFilesChanged);
+    connect(optionsDialog, &OptionsDialog::optionsaddExtensionLEChanged,
+        model, &PhotoReducerModel::optionsAddExtensionChanged);
 
     // Photo Options
     connect(optionsDialog, &OptionsDialog::optionsMaintainRatioCBChanged,
@@ -97,18 +106,19 @@ void PhotoReducerController::connectOptionDialogOutToModelIn()
 
 void PhotoReducerController::connectModelOutToOptionDialogIn()
 {
-    connect(model, &PhotoReducerModel::initOptionsSourceDirectory, optionsDialog, &OptionsDialog::initializeSourceDirectoryLE);
-    connect(model, &PhotoReducerModel::initOptionsTargetDirectory, optionsDialog, &OptionsDialog::initializeTargetDirectoryLE);
-    connect(model, &PhotoReducerModel::initOptionsJPGFiles, optionsDialog, &OptionsDialog::initializeJPGFilesCB);
-    connect(model, &PhotoReducerModel::initOptionsPNGFiles, optionsDialog, &OptionsDialog::initializePNGFilesCB);
-    connect(model, &PhotoReducerModel::initOptionsFixFileNames, optionsDialog, &OptionsDialog::initializeFixFileNameCB);
-    connect(model, &PhotoReducerModel::initOptionsOverwrite, optionsDialog, &OptionsDialog::initializeOverwriteCB);
+    connect(model, &PhotoReducerModel::initOptionsSourceDirectory, optionsDialog, &OptionsDialog::initSrcDirLE);
+    connect(model, &PhotoReducerModel::initOptionsTargetDirectory, optionsDialog, &OptionsDialog::initTargetDirLE);
+    connect(model, &PhotoReducerModel::initOptionsJPGFiles, optionsDialog, &OptionsDialog::initJPGFilesCB);
+    connect(model, &PhotoReducerModel::initOptionsPNGFiles, optionsDialog, &OptionsDialog::initPNGFilesCB);
+    connect(model, &PhotoReducerModel::initOptionsFixFileNames, optionsDialog, &OptionsDialog::initFixFileNameCB);
+    connect(model, &PhotoReducerModel::initOptionsAddExtension, optionsDialog, &OptionsDialog::initExtensionLE);
+    connect(model, &PhotoReducerModel::initOptionsOverwrite, optionsDialog, &OptionsDialog::initOverwriteCB);
 
-    connect(model, &PhotoReducerModel::initOptionsMaxWidth, optionsDialog, &OptionsDialog::initializeMaxWidthLE);
-    connect(model, &PhotoReducerModel::initOptionsMaxHeight, optionsDialog, &OptionsDialog::initializeMaxHeightLE);
-    connect(model, &PhotoReducerModel::initOptionsScaleFactor, optionsDialog, &OptionsDialog::initializeScaleFactorLE);
-    connect(model, &PhotoReducerModel::initOptionsMaintainRatio, optionsDialog, &OptionsDialog::initializeMaintainRatioCB);
-    connect(model, &PhotoReducerModel::initOptionsDispalyResized, optionsDialog, &OptionsDialog::initializeDisplayResizedCB);
+    connect(model, &PhotoReducerModel::initOptionsMaxWidth, optionsDialog, &OptionsDialog::initMaxWidthLE);
+    connect(model, &PhotoReducerModel::initOptionsMaxHeight, optionsDialog, &OptionsDialog::initMaxHeightLE);
+    connect(model, &PhotoReducerModel::initOptionsScaleFactor, optionsDialog, &OptionsDialog::initScaleFactorLE);
+    connect(model, &PhotoReducerModel::initOptionsMaintainRatio, optionsDialog, &OptionsDialog::initMaintainRatioCB);
+    connect(model, &PhotoReducerModel::initOptionsDispalyResized, optionsDialog, &OptionsDialog::initDisplayResizedCB);
 
     connect(model, &PhotoReducerModel::optionsDialogMaxWidthError, optionsDialog, &OptionsDialog::onMaxWidthError);
     connect(model, &PhotoReducerModel::optionsDialogMaxHeightError, optionsDialog, &OptionsDialog::onMaxHeightError);

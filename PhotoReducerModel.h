@@ -26,6 +26,7 @@ public slots:
     void optionsPNGCheckBoxChanged(bool checked) { processPNGFiles = checked; };
     void optionsSafeWebNameChanged(bool checked) { fixFileName = checked; };
     void optionsOverWriteFilesChanged(bool checked) { overWriteFiles = checked; };
+    void optionsAddExtensionChanged(QString extension);
     void optionsGoodFindFiles(bool optionsGood);
 /*
  * Photo options slots.
@@ -49,6 +50,7 @@ signals:
     void initOptionsJPGFiles(bool checked);
     void initOptionsPNGFiles(bool checked);
     void initOptionsFixFileNames(bool checked);
+    void initOptionsAddExtension(QString extension);
     void initOptionsOverwrite(bool checked);
     void initOptionsMaxWidth(QString maxWidth);
     void initOptionsMaxHeight(QString maxHeight);
@@ -88,6 +90,7 @@ private:
     std::string targetDirectory;
     std::string relocDirectory;
     std::string resizedPostfix;
+    
 /*
  * Photo Options.
  */

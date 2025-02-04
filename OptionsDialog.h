@@ -24,22 +24,18 @@ public:
     ~OptionsDialog();
 
 public slots:
-    void initializeSourceDirectoryLE(QString newSrcDir)
-        { sourceDirectoryLineEdit->setText(newSrcDir); };
-    void initializeTargetDirectoryLE(QString newTargetDir)
-        { targetDirectoryLineEdit->setText(newTargetDir); };
-    void initializeJPGFilesCB(bool checked) { JPGFileTypeCheckBox->setChecked(checked); };
-    void initializePNGFilesCB(bool checked) { PNGFileTypecheckBox->setChecked(checked); };
-    void initializeFixFileNameCB(bool checked) { fixFileNameCheckBox->setChecked(checked); };
-    void initializeOverwriteCB(bool checked) { overwriteCheckBox->setChecked(checked); };
-    void initializeMaxWidthLE(QString width) { maxWidthLineEdit->setText(width); };
-    void initializeMaxHeightLE(QString height) { maxHeightLineEdit->setText(height); };
-    void initializeScaleFactorLE(QString scaleFactor)
-        { scaleFactorLineEdit->setText(scaleFactor); };
-    void initializeMaintainRatioCB(bool checked)
-        { maintainRatioCheckBox->setChecked(checked); };
-    void initializeDisplayResizedCB(bool checked)
-        { displayResizedCheckBox->setChecked(checked); };
+    void initSrcDirLE(QString newSrcDir) { sourceDirectoryLineEdit->setText(newSrcDir); };
+    void initTargetDirLE(QString newTargetDir) { targetDirectoryLineEdit->setText(newTargetDir); };
+    void initJPGFilesCB(bool checked) { JPGFileTypeCheckBox->setChecked(checked); };
+    void initPNGFilesCB(bool checked) { PNGFileTypecheckBox->setChecked(checked); };
+    void initFixFileNameCB(bool checked) { fixFileNameCheckBox->setChecked(checked); };
+    void initOverwriteCB(bool checked) { overwriteCheckBox->setChecked(checked); };
+    void initExtensionLE(QString extension) { addExtensionLineEdit->setText(extension); };
+    void initMaxWidthLE(QString width) { maxWidthLineEdit->setText(width); };
+    void initMaxHeightLE(QString height) { maxHeightLineEdit->setText(height); };
+    void initScaleFactorLE(QString scaleFactor) { scaleFactorLineEdit->setText(scaleFactor); };
+    void initMaintainRatioCB(bool checked) { maintainRatioCheckBox->setChecked(checked); };
+    void initDisplayResizedCB(bool checked) { displayResizedCheckBox->setChecked(checked); };
     void onMaxWidthError(QString eMsg) { handelLineEditError(eMsg, maxWidthLineEdit); };
     void onMaxHeightError(QString eMsg) { handelLineEditError(eMsg, maxHeightLineEdit); };
     void onScaleFactorError(QString eMsg) { handelLineEditError(eMsg, scaleFactorLineEdit); };
@@ -63,11 +59,11 @@ signals:
     void optionsScaleFactorLEChanged(QString scaleFactorQS);
 
 private slots:
-    void on_sourceDirBrowsePushButton_clicked();
-    void on_targetDirectoryLineEdit_textChanged();
-    void on_sourceDirectoryLineEdit_textChanged();
-    void on_targetDirectoryBrowsePushButton_clicked();
-    void on_addExtensionLineEdit_editingFinished();
+    void on_sourceDirBrowsePushButton_clicked() { dirBrowsePushButtonClicked(sourceDirectoryLineEdit, "Source"); };
+    void on_targetDirectoryLineEdit_textChanged() { emit targetDirectoryLEChanged(targetDirectoryLineEdit->text()); };
+    void on_sourceDirectoryLineEdit_textChanged() { emit sourceDirectoryLEChanged(sourceDirectoryLineEdit->text()); };
+    void on_targetDirectoryBrowsePushButton_clicked() {dirBrowsePushButtonClicked(targetDirectoryLineEdit, "Target"); };
+    void on_addExtensionLineEdit_editingFinished() { emit optionsaddExtensionLEChanged(addExtensionLineEdit->text()); };
     void on_maxWidthLineEdit_editingFinished() { emit optionsMaxWidthLEChanged(maxWidthLineEdit->text()); };
     void on_maxHeightLineEdit_editingFinished() { emit optionsMaxHeightLEChanged(maxHeightLineEdit->text()); };
     void on_scaleFactorLineEdit_editingFinished() { emit optionsScaleFactorLEChanged(scaleFactorLineEdit->text()); };
@@ -85,6 +81,8 @@ private:
     QHBoxLayout* layOutTargetDirectory();
     void handelLineEditError(QString eMsg, QLineEdit* badLineEdit);
     void clearErrorLineEdit(QLineEdit* correctedLineEdit);
+    void connectDialogButtons();
+    void dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText);
 
     QGroupBox* fileAndDirectoryGroupBox;
     QCheckBox* JPGFileTypeCheckBox;

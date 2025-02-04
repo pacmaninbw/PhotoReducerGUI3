@@ -29,6 +29,11 @@ void PhotoReducerModel::incrementResizedPhotoCount()
     emit resizedPhotosCountValueChanged(resizedPhotosCount);
 }
 
+void PhotoReducerModel::optionsAddExtensionChanged(QString extension)
+{
+    resizedPostfix = extension.toStdString();
+}
+
 void PhotoReducerModel::setPhotosToResizeCount(std::size_t newValue)
 {
     if (newValue != photosToResizeCount) {
@@ -84,6 +89,7 @@ void PhotoReducerModel::initializeOptionsDialog()
 {
     emit initOptionsSourceDirectory(QString::fromStdString(sourceDirectory));
     emit initOptionsTargetDirectory(QString::fromStdString(targetDirectory));
+    emit initOptionsAddExtension(QString::fromStdString(resizedPostfix));
     emit initOptionsJPGFiles(processJPGFiles);
     emit initOptionsPNGFiles(processJPGFiles);
     emit initOptionsFixFileNames(fixFileName);

@@ -24,12 +24,12 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
     setUpOtionsDialogUI();
 
-    QObject::connect(optionsButtonBox, &QDialogButtonBox::accepted,
-        this, qOverload<>(&QDialog::accept));
-        
-    QObject::connect(optionsButtonBox, &QDialogButtonBox::rejected,
-        this, qOverload<>(&QDialog::reject));
-
+/*
+ * QMetaObject::connectSlotsByName() does not connect Dialog Button Box buttons
+ * or checkboxes. This makes it necessary to connect the buttons and checkboxes
+ * explicitly.
+ */
+    connectDialogButtons();
     connectFileGroupCheckBoxes();
     connectPhotoGroupCheckBoxes();
 
@@ -38,50 +38,6 @@ OptionsDialog::OptionsDialog(QWidget *parent) :
 
 OptionsDialog::~OptionsDialog()
 {
-}
-
-void OptionsDialog::on_sourceDirBrowsePushButton_clicked()
-{
-    QString sourceDir = sourceDirectoryLineEdit->text();
-
-    sourceDir = QFileDialog::getExistingDirectory(nullptr, "Source Directory",
-        sourceDir, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-    sourceDirectoryLineEdit->setText(sourceDir);
-}
-
-void OptionsDialog::on_targetDirectoryLineEdit_textChanged()
-{
-    emit targetDirectoryLEChanged(targetDirectoryLineEdit->text());
-}
-
-void OptionsDialog::on_sourceDirectoryLineEdit_textChanged()
-{
-    emit sourceDirectoryLEChanged(sourceDirectoryLineEdit->text());
-}
-
-void OptionsDialog::on_targetDirectoryBrowsePushButton_clicked()
-{
-    QString targetDir = targetDirectoryLineEdit->text();
-
-    targetDir = QFileDialog::getExistingDirectory(nullptr, "Target Directory",
-        targetDir, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-    targetDirectoryLineEdit->setText(targetDir);
-}
-
-void OptionsDialog::on_addExtensionLineEdit_editingFinished()
-{
-    emit optionsaddExtensionLEChanged(addExtensionLineEdit->text());
-}
-
-void OptionsDialog::on_optionsButtonBox_accepted()
-{
-    QString temp;
-    bool hasNoErrors = true;
-
-    emit optionsDoneFindPhotoFiles(hasNoErrors);
-
 }
 
 void OptionsDialog::setUpOtionsDialogUI()
@@ -135,20 +91,6 @@ QGroupBox* OptionsDialog::setUpPhotoOptionGroupBox()
     return photoOptionsBox;
 }
 
-void OptionsDialog::connectPhotoGroupCheckBoxes()
-{
-    connect(maintainRatioCheckBox, &QCheckBox::toggled, [this]()
-        {
-            emit optionsMaintainRatioCBChanged(maintainRatioCheckBox->isChecked());
-        }
-    );
-    connect(displayResizedCheckBox, &QCheckBox::toggled, [this]()
-        {
-            emit optionsDisplayResizedCBChanged(displayResizedCheckBox->isChecked());
-        }
-    );
-}
-
 QDialogButtonBox *OptionsDialog::setrUpOptionsButtonBox()
 {
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
@@ -192,6 +134,33 @@ QGroupBox* OptionsDialog::setUpFileGroupBox()
     fileAndDirectoryGroupBox->setLayout(fileAndDirectorylayout);
 
     return fileAndDirectoryGroupBox;
+}
+
+void  OptionsDialog::connectDialogButtons()
+{
+    QObject::connect(optionsButtonBox, &QDialogButtonBox::accepted,
+        this, qOverload<>(&QDialog::accept));
+        
+    QObject::connect(optionsButtonBox, &QDialogButtonBox::rejected,
+        this, qOverload<>(&QDialog::reject));
+}
+
+/*
+ * Please pardon the repetition of code in the following 2 functions. I am still
+ * researching how to pass a signal that needs to be emitted into a function.
+ */
+void OptionsDialog::connectPhotoGroupCheckBoxes()
+{
+    connect(maintainRatioCheckBox, &QCheckBox::toggled, [this]()
+        {
+            emit optionsMaintainRatioCBChanged(maintainRatioCheckBox->isChecked());
+        }
+    );
+    connect(displayResizedCheckBox, &QCheckBox::toggled, [this]()
+        {
+            emit optionsDisplayResizedCBChanged(displayResizedCheckBox->isChecked());
+        }
+    );
 }
 
 void OptionsDialog::connectFileGroupCheckBoxes()
@@ -271,4 +240,29 @@ void OptionsDialog::clearErrorLineEdit(QLineEdit *correctedLineEdit)
 {
     correctedLineEdit->setStyleSheet("background-color: white;");
 }
+
+void OptionsDialog::dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText)
+{
+    QString textToChange = dirLineEdit->text();
+    QString fileDialogTitle = dirText;
+    fileDialogTitle += " Directory";
+
+    textToChange = QFileDialog::getExistingDirectory(nullptr, fileDialogTitle,
+        textToChange, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    dirLineEdit->setText(textToChange);
+}
+
+/*
+ * Slots for the widgets.
+ */
+void OptionsDialog::on_optionsButtonBox_accepted()
+{
+    QString temp;
+    bool hasNoErrors = true;
+
+    emit optionsDoneFindPhotoFiles(hasNoErrors);
+
+}
+
 
