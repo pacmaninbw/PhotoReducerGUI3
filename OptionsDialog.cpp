@@ -57,8 +57,6 @@ void OptionsDialog::setUpOtionsDialogUI()
     QString dialogTitle = windowTitle();
     dialogTitle += " Options:";
 
-    resize(500, 500);
-
     setWindowTitle(dialogTitle);
 }
 
@@ -77,13 +75,13 @@ QGroupBox* OptionsDialog::setUpPhotoOptionGroupBox()
         "Display Resized Photo", "displayResizedCheckBox", this);
     photoOptionsLayout->addRow(displayResizedCheckBox);
 
-    maxWidthLineEdit = createNamedQTWidget<QLineEdit>("maxWidthLineEdit", this);
+    maxWidthLineEdit = createNumericLineEdit("maxWidthLineEdit");
     photoOptionsLayout->addRow("Maximum Photo Width", maxWidthLineEdit);
 
-    maxHeightLineEdit = createNamedQTWidget<QLineEdit>("maxHeightLineEdit", this);
+    maxHeightLineEdit = createNumericLineEdit("maxHeightLineEdit");
     photoOptionsLayout->addRow("Maximum Photo Height", maxHeightLineEdit);
 
-    scaleFactorLineEdit = createNamedQTWidget<QLineEdit>("scaleFactorLineEdit", this);
+    scaleFactorLineEdit = createNumericLineEdit("scaleFactorLineEdit");
     photoOptionsLayout->addRow("Scale Factor", scaleFactorLineEdit);
 
     photoOptionsBox->setLayout(photoOptionsLayout);
@@ -200,8 +198,7 @@ QHBoxLayout *OptionsDialog::layOutSourceDirectory()
     QHBoxLayout *srcDirLayout = new QHBoxLayout;
     srcDirLayout->setObjectName("srcDirLayout");
 
-    sourceDirectoryLineEdit = createNamedQTWidget<QLineEdit>("sourceDirectoryLineEdit", this);
-    sourceDirectoryLineEdit->setReadOnly(true);
+    sourceDirectoryLineEdit = createDirectoryLineEdit("sourceDirectoryLineEdit");
     srcDirLayout->addWidget(sourceDirectoryLineEdit);
 
     sourceDirBrowsePushButton = createNameQTWidgetWithText<QPushButton>(
@@ -216,8 +213,7 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
     QHBoxLayout *targetDirLayout = new QHBoxLayout();
     targetDirLayout->setObjectName("targetDirLayout");
 
-    targetDirectoryLineEdit = createNamedQTWidget<QLineEdit>("targetDirectoryLineEdit", this);
-    targetDirectoryLineEdit->setReadOnly(true);
+    targetDirectoryLineEdit = createDirectoryLineEdit("targetDirectoryLineEdit");
     targetDirectoryBrowsePushButton = createNameQTWidgetWithText<QPushButton>(
         "Browse", "targetDirectoryBrowsePushButton", this);
 
@@ -232,13 +228,13 @@ void OptionsDialog::handelLineEditError(QString eMsg, QLineEdit *badLineEdit)
     QMessageBox errorMessageBox;
     errorMessageBox.critical(0,"Error:", eMsg);
     errorMessageBox.setFixedSize(500,200);
-    badLineEdit->setStyleSheet("background-color: yellow;");
+    badLineEdit->setStyleSheet(numericLEStyleError);
     optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
 void OptionsDialog::clearErrorLineEdit(QLineEdit *correctedLineEdit)
 {
-    correctedLineEdit->setStyleSheet("background-color: white;");
+    correctedLineEdit->setStyleSheet(numericLEStyle);
 }
 
 void OptionsDialog::dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText)
@@ -285,3 +281,21 @@ void OptionsDialog::initOptionsValues(OptionsInitStruct modelValues)
         QString::number(modelValues.scaleFactor) : QString("")));
 }
 
+QLineEdit* OptionsDialog::createNumericLineEdit(const char *objectName)
+{
+    QLineEdit* numericLineEdit = createNamedQTWidget<QLineEdit>(objectName, this);
+
+    numericLineEdit->setStyleSheet(numericLEStyle);
+
+    return numericLineEdit;
+}
+
+QLineEdit* OptionsDialog::createDirectoryLineEdit(const char *objectName)
+{
+    QLineEdit* directoryLineEdit = createNamedQTWidget<QLineEdit>(objectName, this);
+
+    directoryLineEdit->setReadOnly(true);
+    directoryLineEdit->setStyleSheet(directoryLEStyle);
+
+    return directoryLineEdit;
+}

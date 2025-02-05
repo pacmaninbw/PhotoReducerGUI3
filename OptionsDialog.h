@@ -73,6 +73,8 @@ private:
     void clearErrorLineEdit(QLineEdit* correctedLineEdit);
     void connectDialogButtons();
     void dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText);
+    QLineEdit* createNumericLineEdit(const char* objectName);
+    QLineEdit* createDirectoryLineEdit(const char* objectName);
 
     QGroupBox* fileAndDirectoryGroupBox;
     QCheckBox* JPGFileTypeCheckBox;
@@ -96,6 +98,9 @@ private:
     QVBoxLayout* optionsDialogLayout;
 
     const int groupBoxSpacing = 60;
+    const char* numericLEStyle = "width: 60px; background-color: white;";
+    const char* numericLEStyleError = "width: 60px; background-color: yellow;";
+    const char* directoryLEStyle = "width: 400px;";
 };
 
 #endif  // OPTIONSDIALOG_H_
