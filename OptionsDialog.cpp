@@ -265,4 +265,23 @@ void OptionsDialog::on_optionsButtonBox_accepted()
 
 }
 
+void OptionsDialog::initOptionsValues(OptionsInitStruct modelValues)
+{
+    sourceDirectoryLineEdit->setText(QString::fromStdString(modelValues.sourceDirectory));
+    targetDirectoryLineEdit->setText(QString::fromStdString(modelValues.targetDirectory));
+    JPGFileTypeCheckBox->setChecked(modelValues.processJPGFiles);
+    PNGFileTypecheckBox->setChecked(modelValues.processPNGFiles);
+    fixFileNameCheckBox->setChecked(modelValues.fixFileName);
+    overwriteCheckBox->setChecked(modelValues.overWriteFiles);
+    addExtensionLineEdit->setText(QString::fromStdString(modelValues.resizedPostfix));
+
+    maintainRatioCheckBox->setChecked(modelValues.maintainRatio);
+    displayResizedCheckBox->setChecked(modelValues.displayResized);
+    maxWidthLineEdit->setText(((modelValues.maxWidth > 0)?
+        QString::number(modelValues.maxWidth) : QString("")));
+    maxHeightLineEdit->setText(((modelValues.maxWidth > 0)?
+        QString::number(modelValues.maxHeight) : QString("")));
+    scaleFactorLineEdit->setText(((modelValues.maxWidth > 0)?
+        QString::number(modelValues.scaleFactor) : QString("")));
+}
 

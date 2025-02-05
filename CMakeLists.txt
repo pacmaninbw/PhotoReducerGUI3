@@ -21,6 +21,7 @@ set(PROJECT_SOURCES
         mainwindow.h
         OptionsDialog.cpp 
         OptionsDialog.h
+        OptionsInitStruct.h
     	PhotoReducerModel.h
         PhotoReducerModel.cpp
         PhotoReducerController.cpp

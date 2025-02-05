@@ -87,19 +87,22 @@ void PhotoReducerModel::initializeMainWindow()
 
 void PhotoReducerModel::initializeOptionsDialog()
 {
-    emit initOptionsSourceDirectory(QString::fromStdString(sourceDirectory));
-    emit initOptionsTargetDirectory(QString::fromStdString(targetDirectory));
-    emit initOptionsAddExtension(QString::fromStdString(resizedPostfix));
-    emit initOptionsJPGFiles(processJPGFiles);
-    emit initOptionsPNGFiles(processJPGFiles);
-    emit initOptionsFixFileNames(fixFileName);
-    emit initOptionsOverwrite(overWriteFiles);
-    emit initOptionsMaxWidth(QString::number(maxWidth));
-    emit initOptionsMaxHeight(QString::number(maxHeight));
-    emit initOptionsScaleFactor(QString::number(scaleFactor));
-    emit initOptionsMaintainRatio(maintainRatio);
-    emit initOptionsDispalyResized(displayResized);
+    OptionsInitStruct modelValues;
+    modelValues.sourceDirectory = sourceDirectory;
+    modelValues.targetDirectory = targetDirectory;
+    modelValues.processJPGFiles = processJPGFiles;
+    modelValues.processPNGFiles = processPNGFiles;
+    modelValues.fixFileName = fixFileName;
+    modelValues.overWriteFiles = overWriteFiles;
+    modelValues.resizedPostfix = resizedPostfix;
 
+    modelValues.maintainRatio = maintainRatio;
+    modelValues.displayResized = displayResized;
+    modelValues.maxWidth = maxWidth;
+    modelValues.maxHeight = maxHeight;
+    modelValues.scaleFactor = scaleFactor;
+
+    emit initOptionsValues(modelValues);
 }
 
 void PhotoReducerModel::optionsSourceDirectoryEdited(QString newSrcDir)

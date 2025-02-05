@@ -106,19 +106,7 @@ void PhotoReducerController::connectOptionDialogOutToModelIn()
 
 void PhotoReducerController::connectModelOutToOptionDialogIn()
 {
-    connect(model, &PhotoReducerModel::initOptionsSourceDirectory, optionsDialog, &OptionsDialog::initSrcDirLE);
-    connect(model, &PhotoReducerModel::initOptionsTargetDirectory, optionsDialog, &OptionsDialog::initTargetDirLE);
-    connect(model, &PhotoReducerModel::initOptionsJPGFiles, optionsDialog, &OptionsDialog::initJPGFilesCB);
-    connect(model, &PhotoReducerModel::initOptionsPNGFiles, optionsDialog, &OptionsDialog::initPNGFilesCB);
-    connect(model, &PhotoReducerModel::initOptionsFixFileNames, optionsDialog, &OptionsDialog::initFixFileNameCB);
-    connect(model, &PhotoReducerModel::initOptionsAddExtension, optionsDialog, &OptionsDialog::initExtensionLE);
-    connect(model, &PhotoReducerModel::initOptionsOverwrite, optionsDialog, &OptionsDialog::initOverwriteCB);
-
-    connect(model, &PhotoReducerModel::initOptionsMaxWidth, optionsDialog, &OptionsDialog::initMaxWidthLE);
-    connect(model, &PhotoReducerModel::initOptionsMaxHeight, optionsDialog, &OptionsDialog::initMaxHeightLE);
-    connect(model, &PhotoReducerModel::initOptionsScaleFactor, optionsDialog, &OptionsDialog::initScaleFactorLE);
-    connect(model, &PhotoReducerModel::initOptionsMaintainRatio, optionsDialog, &OptionsDialog::initMaintainRatioCB);
-    connect(model, &PhotoReducerModel::initOptionsDispalyResized, optionsDialog, &OptionsDialog::initDisplayResizedCB);
+    connect(model, &PhotoReducerModel::initOptionsValues, optionsDialog, &OptionsDialog::initOptionsValues);
 
     connect(model, &PhotoReducerModel::optionsDialogMaxWidthError, optionsDialog, &OptionsDialog::onMaxWidthError);
     connect(model, &PhotoReducerModel::optionsDialogMaxHeightError, optionsDialog, &OptionsDialog::onMaxHeightError);

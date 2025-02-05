@@ -1,6 +1,7 @@
 #ifndef OPTIONSDIALOG_H_
 #define OPTIONSDIALOG_H_
 
+#include "OptionsInitStruct.h"
 #include <QVariant>
 #include <QAbstractButton>
 #include <QApplication>
@@ -24,18 +25,7 @@ public:
     ~OptionsDialog();
 
 public slots:
-    void initSrcDirLE(QString newSrcDir) { sourceDirectoryLineEdit->setText(newSrcDir); };
-    void initTargetDirLE(QString newTargetDir) { targetDirectoryLineEdit->setText(newTargetDir); };
-    void initJPGFilesCB(bool checked) { JPGFileTypeCheckBox->setChecked(checked); };
-    void initPNGFilesCB(bool checked) { PNGFileTypecheckBox->setChecked(checked); };
-    void initFixFileNameCB(bool checked) { fixFileNameCheckBox->setChecked(checked); };
-    void initOverwriteCB(bool checked) { overwriteCheckBox->setChecked(checked); };
-    void initExtensionLE(QString extension) { addExtensionLineEdit->setText(extension); };
-    void initMaxWidthLE(QString width) { maxWidthLineEdit->setText(width); };
-    void initMaxHeightLE(QString height) { maxHeightLineEdit->setText(height); };
-    void initScaleFactorLE(QString scaleFactor) { scaleFactorLineEdit->setText(scaleFactor); };
-    void initMaintainRatioCB(bool checked) { maintainRatioCheckBox->setChecked(checked); };
-    void initDisplayResizedCB(bool checked) { displayResizedCheckBox->setChecked(checked); };
+    void initOptionsValues(OptionsInitStruct modelValues);
     void onMaxWidthError(QString eMsg) { handelLineEditError(eMsg, maxWidthLineEdit); };
     void onMaxHeightError(QString eMsg) { handelLineEditError(eMsg, maxHeightLineEdit); };
     void onScaleFactorError(QString eMsg) { handelLineEditError(eMsg, scaleFactorLineEdit); };

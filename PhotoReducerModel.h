@@ -1,6 +1,7 @@
 #ifndef PHOTOREDUCERMODEL_H_
 #define PHOTOREDUCERMODEL_H_
 
+#include "OptionsInitStruct.h"
 #include <QObject>
 #include <QString>
 #include <string>
@@ -39,24 +40,13 @@ public slots:
     
 
 signals:
+    void initOptionsValues(OptionsInitStruct modelValues);
     void resizedPhotosCountValueChanged(std::size_t newValue);
     void photosToResizeCountValueChanged(std::size_t newValue);
     void sourceDirectoryValueChanged(QString newSrcDir);
     void targetDirectoryValueChanged(QString newTargetDir);
     void initMainWindowSourceDirectory(QString newSrcDir);
     void initMainWindowTargetDirectory(QString newTargetDir);
-    void initOptionsSourceDirectory(QString newSrcDir);
-    void initOptionsTargetDirectory(QString newTargetDir);
-    void initOptionsJPGFiles(bool checked);
-    void initOptionsPNGFiles(bool checked);
-    void initOptionsFixFileNames(bool checked);
-    void initOptionsAddExtension(QString extension);
-    void initOptionsOverwrite(bool checked);
-    void initOptionsMaxWidth(QString maxWidth);
-    void initOptionsMaxHeight(QString maxHeight);
-    void initOptionsScaleFactor(QString scaleFactor);
-    void initOptionsMaintainRatio(bool checked);
-    void initOptionsDispalyResized(bool checked);
     void optionsDialogMaxWidthError(QString eMsg);
     void optionsDialogMaxHeightError(QString eMsg);
     void optionsDialogScaleFactorError(QString eMsg);
@@ -94,7 +84,7 @@ private:
 /*
  * Photo Options.
  */
-	bool displayResized = false;
+    bool displayResized = false;
     bool maintainRatio = false;
     std::size_t maxWidth = 0;
     std::size_t maxHeight = 0;
