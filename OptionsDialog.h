@@ -98,6 +98,7 @@ private:
     QVBoxLayout* optionsDialogLayout;
 
     const int groupBoxSpacing = 60;
+    const int maxDigitsNumericLE = 5;
     const char* numericLEStyle = "width: 60px; background-color: white;";
     const char* numericLEStyleError = "width: 60px; background-color: yellow;";
     const char* directoryLEStyle = "width: 400px;";

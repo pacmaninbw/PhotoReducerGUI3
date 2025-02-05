@@ -126,6 +126,8 @@ QGroupBox* OptionsDialog::setUpFileGroupBox()
     fileAndDirectorylayout->addRow("Target Directory", layOutTargetDirectory());
 
     addExtensionLineEdit = createNamedQTWidget<QLineEdit>("addExtensionLineEdit", this);
+    addExtensionLineEdit->setStyleSheet("width: 200px;");
+    addExtensionLineEdit->setMaxLength(20);
     fileAndDirectorylayout->addRow("Add Extension", addExtensionLineEdit);
 
     fileAndDirectoryGroupBox = new QGroupBox("File Type and Directory Options", this);
@@ -286,6 +288,7 @@ QLineEdit* OptionsDialog::createNumericLineEdit(const char *objectName)
     QLineEdit* numericLineEdit = createNamedQTWidget<QLineEdit>(objectName, this);
 
     numericLineEdit->setStyleSheet(numericLEStyle);
+    numericLineEdit->setMaxLength(maxDigitsNumericLE);
 
     return numericLineEdit;
 }
