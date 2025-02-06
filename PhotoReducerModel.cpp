@@ -179,9 +179,9 @@ void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
     }
 }
 
-void PhotoReducerModel::optionsGoodFindFiles(bool optionsGood)
+void PhotoReducerModel::optionsGoodFindFiles()
 {
-    
+    buildPhotoInputAndOutputList();
 }
 
 /*
@@ -200,6 +200,7 @@ void PhotoReducerModel::buildPhotoInputAndOutputList()
     {
         fs::path targetDir = targetDirectory;
         photoFileList = copyInFileNamesToPhotoListAddOutFileNames(inputPhotoList, targetDir);
+        setPhotosToResizeCount(photoFileList.size());
     }
 }
 

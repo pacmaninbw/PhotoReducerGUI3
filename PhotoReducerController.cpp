@@ -100,7 +100,7 @@ void PhotoReducerController::connectOptionDialogOutToModelIn()
     connect(optionsDialog, &OptionsDialog::optionsScaleFactorLEChanged,
         model, &PhotoReducerModel::optionsScaleFactorChanged);
 
-    connect(optionsDialog, &OptionsDialog::optionsDoneFindPhotoFiles,
+    connect(optionsDialog, &OptionsDialog::optionsGoodFindFiles,
         model, &PhotoReducerModel::optionsGoodFindFiles);
 }
 

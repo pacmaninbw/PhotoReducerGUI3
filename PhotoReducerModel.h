@@ -42,7 +42,7 @@ public slots:
     void optionsSafeWebNameChanged(bool checked) { fixFileName = checked; };
     void optionsOverWriteFilesChanged(bool checked) { overWriteFiles = checked; };
     void optionsAddExtensionChanged(QString extension);
-    void optionsGoodFindFiles(bool optionsGood);
+    void optionsGoodFindFiles();
 /*
  * Photo options slots.
  */

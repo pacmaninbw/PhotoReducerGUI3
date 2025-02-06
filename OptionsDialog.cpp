@@ -5,6 +5,7 @@
 #include <QAbstractButton>
 #include <QApplication>
 #include <QCheckBox>
+#include <QCloseEvent>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QFileDialog>
@@ -225,8 +226,9 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
     return targetDirLayout;
 }
 
-void OptionsDialog::handelLineEditError(QString eMsg, QLineEdit *badLineEdit)
+void OptionsDialog::handelLineEditError(QString eMsg, QLineEdit *badLineEdit, const unsigned int eCode)
 {
+    modelHasErrors += eCode;
     QMessageBox errorMessageBox;
     errorMessageBox.critical(0,"Error:", eMsg);
     errorMessageBox.setFixedSize(500,200);
@@ -234,8 +236,9 @@ void OptionsDialog::handelLineEditError(QString eMsg, QLineEdit *badLineEdit)
     optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
-void OptionsDialog::clearErrorLineEdit(QLineEdit *correctedLineEdit)
+void OptionsDialog::clearErrorLineEdit(QLineEdit *correctedLineEdit, const unsigned int eCode)
 {
+    modelHasErrors -= eCode;
     correctedLineEdit->setStyleSheet(numericLEStyle);
 }
 
@@ -254,13 +257,18 @@ void OptionsDialog::dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const cha
 /*
  * Slots for the widgets.
  */
-void OptionsDialog::on_optionsButtonBox_accepted()
+void OptionsDialog::closeEvent(QCloseEvent* cEvent)
 {
-    QString temp;
-    bool hasNoErrors = true;
-
-    emit optionsDoneFindPhotoFiles(hasNoErrors);
-
+    if (modelHasErrors)
+    {
+        cEvent->ignore(); // Prevent closing
+        QMessageBox::warning(this, "Errors", "Please correct the errors highlighted in yellow before closing.");
+    }
+    else
+    {
+        QDialog::closeEvent(cEvent);
+        emit optionsGoodFindFiles();
+    }
 }
 
 void OptionsDialog::initOptionsValues(OptionsInitStruct modelValues)
