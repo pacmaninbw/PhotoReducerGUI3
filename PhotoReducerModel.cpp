@@ -1,11 +1,11 @@
 #include <algorithm>
 #include <cctype>
 #include <filesystem>
-#include <iostream>
 #include <iterator>
 #include <opencv2/opencv.hpp>
 #include "PhotoReducerModel.h"
 #include <QDir>
+#include <QMessageBox>
 #include <QString>
 #include <ranges>
 #include <string>
@@ -321,7 +321,12 @@ bool PhotoReducerModel::resizeAndSavePhoto(const PhotoFile &photoFile)
 
     cv::Mat photo = cv::imread(photoFile.inputName);
     if (photo.empty()) {
-        std::cerr << "Could not read photo " << photoFile.inputName << "!\n";
+        QString eMsg = "Could not read photo ";
+        eMsg += QString::fromStdString(photoFile.inputName);
+        QMessageBox errorMessageBox;
+        errorMessageBox.critical(0,"Error:", eMsg);
+        errorMessageBox.setFixedSize(500,300);
+
         return false;
     }
 
@@ -358,8 +363,6 @@ cv::Mat PhotoReducerModel::resizeByUserSpecification(cv::Mat &photo)
         {
             return resizePhotoByHeightMaintainGeometry(photo);
         }
-        std::cerr << "Neither width nor height were specified with"
-            " --maintain-ratio, can't resize photo!\n";
         return photo;
     }
     else
@@ -382,7 +385,12 @@ bool PhotoReducerModel::saveResizedPhoto(cv::Mat &resizedPhoto, const std::strin
     bool saved = cv::imwrite(webSafeName, resizedPhoto);
 
     if (!saved) {
-        std::cerr << "Could not write photo " << webSafeName << " to file!\n";
+        QString eMsg = "Could not write photo ";
+        eMsg += QString::fromStdString(webSafeName);
+        QMessageBox errorMessageBox;
+        errorMessageBox.critical(0,"Error:", eMsg);
+        errorMessageBox.setFixedSize(500,300);
+
     }
 
     // Prevent memory leak.
