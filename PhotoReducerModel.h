@@ -2,6 +2,7 @@
 #define PHOTOREDUCERMODEL_H_
 
 #include <filesystem>
+#include <opencv2/opencv.hpp>
 #include "OptionsInitStruct.h"
 #include <QObject>
 #include <QString>
@@ -93,8 +94,18 @@ private:
         InputPhotoList& inFileList, fs::path& targetDir);
     
     // Process all the photo files found.
+    void resizeAllPhotosInList();
+    bool resizeAndSavePhoto(const PhotoFile& photoFile);
+    cv::Mat resizeByUserSpecification(cv::Mat& photo);
+    bool saveResizedPhoto(cv::Mat& resizedPhoto, const std::string webSafeName);
+    cv::Mat resizePhotoByPercentage(cv::Mat& photo, const unsigned int percentage);
+    cv::Mat resizePhotoByHeightMaintainGeometry(cv::Mat& photo);
+    cv::Mat resizePhotoByWidthMaintainGeometry(cv::Mat& photo);
+    cv::Mat resizePhoto(cv::Mat& photo, const std::size_t newWdith, const std::size_t newHeight);
 
-    
+/*
+ * Private Variables.
+ */
     std::size_t resizedPhotosCount;
     std::size_t photosToResizeCount;
     PhotoFileList photoFileList;

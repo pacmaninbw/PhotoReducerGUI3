@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <iostream>
 #include <iterator>
+#include <opencv2/opencv.hpp>
 #include "PhotoReducerModel.h"
 #include <QDir>
 #include <QString>
@@ -290,4 +291,153 @@ PhotoFileList PhotoReducerModel::copyInFileNamesToPhotoListAddOutFileNames(
     }
 
     return photoFileList;
+}
+
+/*
+ * Resize all photos in the list of photo files.
+ *
+ * The following code originated in the 2 previous versions of the Photo Reduction Tool
+ * in the file PhotoResizer.[h,cpp]. It has been modified to be a part of the model,
+ * which decreases the number of parameters of some functions.
+ */
+void PhotoReducerModel::resizeAllPhotosInList()
+{
+    for (auto photo: photoFileList)
+    {
+        if (resizeAndSavePhoto(photo))
+        {
+            incrementResizedPhotoCount();
+        }
+    }
+}
+
+bool PhotoReducerModel::resizeAndSavePhoto(const PhotoFile &photoFile)
+{
+    // Possibly file already exists and user did not specify --overwrite
+    if (photoFile.outputName.empty())
+    {
+        return false;
+    }
+
+    cv::Mat photo = cv::imread(photoFile.inputName);
+    if (photo.empty()) {
+        std::cerr << "Could not read photo " << photoFile.inputName << "!\n";
+        return false;
+    }
+
+    cv::Mat resized = resizeByUserSpecification(photo);
+
+    if (displayResized)
+    {
+        cv::imshow("Resized Photo", resized);
+        cv::waitKey(0);
+    }
+
+    return saveResizedPhoto(resized, photoFile.outputName);
+}
+
+cv::Mat PhotoReducerModel::resizeByUserSpecification(cv::Mat &photo)
+{
+    if (maxWidth > 0 && maxHeight > 0)
+    {
+        return resizePhoto(photo, maxWidth, maxHeight);
+    }
+
+    if (scaleFactor > 0)
+    {
+        return resizePhotoByPercentage(photo, scaleFactor);
+    }
+
+    if (maintainRatio)
+    {
+        if (maxWidth > 0)
+        {
+            return resizePhotoByWidthMaintainGeometry(photo);
+        }
+        if (maxHeight > 0)
+        {
+            return resizePhotoByHeightMaintainGeometry(photo);
+        }
+        std::cerr << "Neither width nor height were specified with"
+            " --maintain-ratio, can't resize photo!\n";
+        return photo;
+    }
+    else
+    {
+        if (maxWidth > 0 && maxHeight == 0)
+        {
+            return resizePhotoByWidthMaintainGeometry(photo);
+        }
+        if (maxHeight > 0 && maxWidth == 0)
+        {
+            return resizePhotoByHeightMaintainGeometry(photo);
+        }
+    }
+
+    return photo;
+}
+
+bool PhotoReducerModel::saveResizedPhoto(cv::Mat &resizedPhoto, const std::string webSafeName)
+{
+    bool saved = cv::imwrite(webSafeName, resizedPhoto);
+
+    if (!saved) {
+        std::cerr << "Could not write photo " << webSafeName << " to file!\n";
+    }
+
+    // Prevent memory leak.
+    resizedPhoto.release();
+
+    return saved;
+}
+
+cv::Mat PhotoReducerModel::resizePhotoByPercentage(cv::Mat &photo, const unsigned int percentage)
+{
+    double percentMult = static_cast<double>(percentage)/100.0;
+
+// Retain the current photo geometry.
+    std::size_t newWidth = static_cast<int>(photo.cols * percentMult);
+    std::size_t newHeight = static_cast<int>(photo.rows * percentMult);
+
+    return resizePhoto(photo, newWidth, newHeight);
+}
+
+cv::Mat PhotoReducerModel::resizePhotoByHeightMaintainGeometry(cv::Mat &photo)
+{
+    if (static_cast<std::size_t>(photo.rows)  <= maxHeight)
+    {
+        return photo;
+    }
+
+    double ratio = static_cast<double>(maxHeight) / static_cast<double>(photo.rows);
+    std::size_t newWidth = static_cast<int>(photo.cols * ratio);
+
+    return resizePhoto(photo, newWidth, maxHeight);
+}
+
+cv::Mat PhotoReducerModel::resizePhotoByWidthMaintainGeometry(cv::Mat &photo)
+{
+    if (static_cast<std::size_t>(photo.cols)  <= maxWidth)
+    {
+        return photo;
+    }
+
+    double ratio = static_cast<double>(maxWidth) / static_cast<double>(photo.cols);
+    std::size_t newHeight = static_cast<int>(photo.rows * ratio);
+
+    return resizePhoto(photo, maxWidth, newHeight);
+}
+
+cv::Mat PhotoReducerModel::resizePhoto(cv::Mat &photo, const std::size_t newWdith, const std::size_t newHeight)
+{
+    cv::Size newSize(newWdith, newHeight);
+
+    cv::Mat resizedPhoto;
+
+    cv::resize(photo, resizedPhoto, newSize, 0, 0, cv::INTER_AREA);
+
+    // Prevent memory leak
+    photo.release();
+
+    return resizedPhoto;
 }
