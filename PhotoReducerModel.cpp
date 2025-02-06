@@ -1,6 +1,14 @@
+#include <algorithm>
+#include <cctype>
+#include <filesystem>
+#include <iostream>
+#include <iterator>
 #include "PhotoReducerModel.h"
 #include <QDir>
 #include <QString>
+#include <ranges>
+#include <string>
+#include <vector>
 
 PhotoReducerModel::PhotoReducerModel(const char* modelName, QObject *parent)
     : QObject{parent}, displayResized{false}, maintainRatio{true}
@@ -75,6 +83,7 @@ int PhotoReducerModel::qstringToInt(QString possibleNumber)
 
     return output;
 }
+
 
 /*
  * Slots
@@ -174,3 +183,111 @@ void PhotoReducerModel::optionsGoodFindFiles(bool optionsGood)
     
 }
 
+/*
+ * The following code originated in the 2 previous versions of the Photo Reduction Tool
+ * in the file photofilefinder.[h,cpp]. It has been modified to be a part of the model,
+ * which decreases the number of parameters of some functions. Since the tool allows
+ * the user to chose the directories to use, some error checking is no longer needed.
+ */
+void PhotoReducerModel::buildPhotoInputAndOutputList()
+{
+    fs::path sourceDir = sourceDirectory;
+
+    InputPhotoList inputPhotoList = findAllPhotos(sourceDir);
+    
+    if (inputPhotoList.size())
+    {
+        fs::path targetDir = targetDirectory;
+        photoFileList = copyInFileNamesToPhotoListAddOutFileNames(inputPhotoList, targetDir);
+    }
+}
+
+InputPhotoList PhotoReducerModel::findAllPhotos(fs::path &originsDir)
+{
+    InputPhotoList tempFileList;
+
+    if (processJPGFiles)
+    {
+        addFilesToListByExtension(originsDir, ".jpg", ".JPG", tempFileList);
+    }
+
+    if (processPNGFiles)
+    {
+        addFilesToListByExtension(originsDir, ".png", ".PNG", tempFileList);
+    }
+
+    return tempFileList;
+}
+
+void PhotoReducerModel::addFilesToListByExtension(
+    std::filesystem::path &cwd, const std::string &extLC,
+    const std::string &extUC, InputPhotoList &photoList
+)
+{
+    auto is_match = [extLC, extUC](auto f) {
+        return f.path().extension().string() == extLC ||
+            f.path().extension().string() == extUC;
+    };
+
+    auto files = fs::directory_iterator{ cwd }
+        | std::views::filter([](auto& f) { return f.is_regular_file(); })
+        | std::views::filter(is_match);
+
+    std::ranges::copy(files, std::back_inserter(photoList));
+}
+
+std::string PhotoReducerModel::makeFileNameWebSafe(const std::string &inName)
+{
+    std::string webSafeName;
+
+    auto toUnderScore = [](unsigned char c) -> unsigned char { return std::isalnum(c)? c : '_'; };
+
+    std::ranges::transform(inName, std::back_inserter(webSafeName), toUnderScore);
+
+    return webSafeName;
+}
+
+std::string PhotoReducerModel::makeOutputFileName(const fs::path &inputFile, const fs::path &targetDir)
+{
+    std::string ext = inputFile.extension().string();
+    std::string outputFileName = inputFile.stem().string();
+
+    if (fixFileName)
+    {
+        outputFileName = makeFileNameWebSafe(outputFileName);
+    }
+
+    if (!resizedPostfix.empty())
+    {
+        outputFileName += "." + resizedPostfix;
+    }
+
+    outputFileName += ext;
+
+    fs::path targetFile = targetDir;
+    targetFile.append(outputFileName);
+
+    if (fs::exists(targetFile) && !overWriteFiles)
+    {
+        ++attemptedOverwrites;
+        targetFile.clear();
+    }
+
+    return targetFile.string();
+}
+
+PhotoFileList PhotoReducerModel::copyInFileNamesToPhotoListAddOutFileNames(
+    InputPhotoList &inFileList, fs::path &targetDir)
+{
+    PhotoFileList photoFileList;
+
+    for (auto const& file: inFileList)
+    {
+        PhotoFile currentPhoto;
+        currentPhoto.inputName = file.string();
+        currentPhoto.outputName = makeOutputFileName(file, targetDir);
+        photoFileList.push_back(currentPhoto);
+    }
+
+    return photoFileList;
+}

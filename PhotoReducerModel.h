@@ -1,11 +1,24 @@
 #ifndef PHOTOREDUCERMODEL_H_
 #define PHOTOREDUCERMODEL_H_
 
+#include <filesystem>
 #include "OptionsInitStruct.h"
 #include <QObject>
 #include <QString>
 #include <string>
 #include <vector>
+
+// std::filesystem can make lines very long.
+namespace fs = std::filesystem;
+
+struct PhotoFile
+{
+    std::string inputName;
+    std::string outputName;
+};
+using PhotoFileList = std::vector<PhotoFile>;
+
+using InputPhotoList = std::vector<fs::path>;
 
 class PhotoReducerModel : public QObject
 {
@@ -60,15 +73,31 @@ private slots:
 
 
 private:
+    // UI releated functions
     void setResizedPhotoCount(std::size_t newValue);
     void incrementResizedPhotoCount();
     void setPhotosToResizeCount(std::size_t newValue);
     void setSourceDirectory(QString newSrcDir);
     void setTargetDirectory(QString newTargetDir);
     int qstringToInt(QString possibleNumber);
+
+    // Get all the photo files in the source directory the user specified.
+    // Apply any name changes to the outout files.
+    void buildPhotoInputAndOutputList();
+    InputPhotoList findAllPhotos(fs::path& originsDir);
+    void addFilesToListByExtension(std::filesystem::path& cwd, const std::string& extLC, 
+        const std::string& extUC, InputPhotoList& photoList);
+    std::string makeFileNameWebSafe(const std::string& inName);
+    std::string makeOutputFileName(const fs::path& inputFile, const fs::path& targetDir);
+    PhotoFileList copyInFileNamesToPhotoListAddOutFileNames(
+        InputPhotoList& inFileList, fs::path& targetDir);
+    
+    // Process all the photo files found.
+
     
     std::size_t resizedPhotosCount;
     std::size_t photosToResizeCount;
+    PhotoFileList photoFileList;
 /*
  * File Options.
  */
@@ -89,6 +118,7 @@ private:
     std::size_t maxWidth = 0;
     std::size_t maxHeight = 0;
     unsigned int scaleFactor = 0;
+    std::size_t attemptedOverwrites = 0;
 };
 
 #endif // PHOTOREDUCERMODEL_H_
