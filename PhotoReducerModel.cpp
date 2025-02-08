@@ -184,6 +184,9 @@ void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
     }
 }
 
+/*
+ * Model Business Logic Implementation
+ */
 void PhotoReducerModel::optionsGoodFindFiles()
 {
     buildPhotoInputAndOutputList();

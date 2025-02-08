@@ -27,6 +27,7 @@ void MainWindow::on_resizedPhotos_valueChanged(std::size_t resizedPhotoCount)
 void MainWindow::on_photosToResizeCount_ValueChanged(std::size_t photosToResize)
 {
     filesToResizeLcdNumber->display(static_cast<int>(photosToResize));
+    resizeProgressBar->setRange(0, static_cast<int>(photosToResize));
 }
 
 void MainWindow::on_SourceDirectory_Changed(QString srcDir)
@@ -103,19 +104,16 @@ void MainWindow::setUpProgressDisplays()
     filesToResizeLabel = createNamedLabel("Photos to Resize", "filesToResizeLabel");
     filesToResizeVBoxLayout->addWidget(filesToResizeLabel, 0, Qt::AlignHCenter);
 
-    filesToResizeLcdNumber = createAndConfigureLCD(
-        "filesToResizeLcdNumber");
+    filesToResizeLcdNumber = createAndConfigureLCD("filesToResizeLcdNumber");
     filesToResizeVBoxLayout->addWidget(filesToResizeLcdNumber, 0, Qt::AlignHCenter);
 
     resizedPhotosLabel = createNamedLabel("Resized Photos","resizedPhotosLabel");
     resizePhotosVBoxLayout->addWidget(resizedPhotosLabel, 0, Qt::AlignHCenter);
 
-    resizedPhotosLcdNumber = createAndConfigureLCD(
-        "resizedPhotosLcdNumber");
+    resizedPhotosLcdNumber = createAndConfigureLCD("resizedPhotosLcdNumber");
     resizePhotosVBoxLayout->addWidget(resizedPhotosLcdNumber, 0, Qt::AlignHCenter);
 
-    resizeProgressBar = createAndConfigureProgressBar(
-        "resizeProgressBar");
+    resizeProgressBar = createAndConfigureProgressBar("resizeProgressBar");
     mwLayout->addWidget(resizeProgressBar, 0, Qt::AlignHCenter);
 }
 
