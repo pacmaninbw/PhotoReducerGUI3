@@ -16,17 +16,18 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 find_package(OpenCV REQUIRED)
 
 set(PROJECT_SOURCES
+        createNamedQTWidget.h
         main.cpp
         mainwindow.cpp
         mainwindow.h
         OptionsDialog.cpp 
         OptionsDialog.h
         OptionsInitStruct.h
+        OptionErrorCode.h
     	PhotoReducerModel.h
         PhotoReducerModel.cpp
         PhotoReducerController.cpp
         PhotoReducerController.h
-        createNamedQTWidget.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

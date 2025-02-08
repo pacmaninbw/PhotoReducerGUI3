@@ -1,6 +1,7 @@
 #ifndef OPTIONSDIALOG_H_
 #define OPTIONSDIALOG_H_
 
+#include "OptionErrorCode.h"
 #include "OptionsInitStruct.h"
 #include <QVariant>
 #include <QAbstractButton>
@@ -26,12 +27,8 @@ public:
 
 public slots:
     void initOptionsValues(OptionsInitStruct modelValues);
-    void onMaxWidthError(QString eMsg) { handelLineEditError(eMsg, maxWidthLineEdit, modelWidthError); };
-    void onMaxHeightError(QString eMsg) { handelLineEditError(eMsg, maxHeightLineEdit, modelHeightError); };
-    void onScaleFactorError(QString eMsg) { handelLineEditError(eMsg, scaleFactorLineEdit, modelScaleFactorError); };
-    void onClearWidthError(bool good) { clearErrorLineEdit(maxWidthLineEdit, modelWidthError); };
-    void onClearHeightError(bool good) { clearErrorLineEdit(maxHeightLineEdit, modelHeightError); };
-    void onClearScaleFactorError(bool good) { clearErrorLineEdit(scaleFactorLineEdit, modelScaleFactorError); };
+    void onModelErrorSignal(OptionErrorSignalContents eMessage) { handelmodelError(eMessage); };
+    void onModelClearError(OptionErrorCode clearedError) { clearModelError(clearedError); };
 
 signals:
     void sourceDirectoryLEChanged(QString newSrcDir);
@@ -70,8 +67,9 @@ private:
     QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);    
     QHBoxLayout* layOutSourceDirectory();
     QHBoxLayout* layOutTargetDirectory();
-    void handelLineEditError(QString eMsg, QLineEdit* badLineEdit, const unsigned int eCode);
-    void clearErrorLineEdit(QLineEdit* correctedLineEdit, const unsigned int eCode);
+    void handelmodelError(const OptionErrorSignalContents &eMessage);
+    void clearModelError(const OptionErrorCode clearedError);
+    void showErrorDisableOKButton(QString error);
     void connectDialogButtons();
     void dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText);
     QLineEdit* createNumericLineEdit(const char* objectName);
@@ -104,12 +102,7 @@ private:
     const char* numericLEStyleError = "width: 60px; background-color: yellow;";
     const char* directoryLEStyle = "width: 400px;";
 
-    const unsigned int modelWidthError = 0x0001; 
-    const unsigned int modelHeightError = 0x0002;
-    const unsigned int modelScaleFactorError = 0x0004;
-    const unsigned int modelMaintainRatioError = 0x0008;
-
-    unsigned int modelHasErrors = 0;
+    OptionErrorCode modelHasErrors = 0;
 };
 
 #endif  // OPTIONSDIALOG_H_

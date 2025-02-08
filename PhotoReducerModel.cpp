@@ -138,12 +138,14 @@ void PhotoReducerModel::optionsMaxWidthChanged(QString maxWidthQS)
         if (width > 0)
         {
             maxWidth = width;
-            emit clearOptionsWidthError(true);
+            emit modelClearError(maxWidthError);
         }
         else
         {
-            emit optionsDialogMaxWidthError(
-                "Max Height must be an integer value greater than zero!");
+            OptionErrorSignalContents errorSignal;
+            errorSignal.errorCode = maxWidthError;
+            errorSignal.errorMessage = "Max Width must be an integer value greater than zero!";
+            emit modelErrorSignal(errorSignal);
         }
     }
 }
@@ -156,12 +158,14 @@ void PhotoReducerModel::optionsMaxHeightChanged(QString maxHeightQS)
         if (height > 0)
         {
             maxHeight = height;
-            emit clearOptionsHeightError(true);
+            emit modelClearError(maxHeightError);
         }
         else
         {
-            emit optionsDialogMaxHeightError(
-                "Max Width must be an integer value greater than zero!");
+            OptionErrorSignalContents errorSignal;
+            errorSignal.errorCode = maxHeightError;
+            errorSignal.errorMessage = "Max Height must be an integer value greater than zero!";
+            emit modelErrorSignal(errorSignal);
         }
     }
 }
@@ -174,12 +178,15 @@ void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
         if (testscaleFactor > 20 && testscaleFactor < 90)
         {
             scaleFactor = testscaleFactor;
-            emit clearOptionsScaleFactorError(true);
+            emit modelClearError(scaleFactorError);
         }
         else
         {
-            emit optionsDialogScaleFactorError("Scale Factor must be an integer value"
-                " greater than 20 and less than 90!");
+            OptionErrorSignalContents errorSignal;
+            errorSignal.errorCode = scaleFactorError;
+            errorSignal.errorMessage = "Scale Factor must be an integer value"
+                " greater than 20 and less than 90!";
+            emit modelErrorSignal(errorSignal);
         }
     }
 }

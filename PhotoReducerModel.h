@@ -3,6 +3,7 @@
 
 #include <filesystem>
 #include <opencv2/opencv.hpp>
+#include "OptionErrorCode.h"
 #include "OptionsInitStruct.h"
 #include <QObject>
 #include <QString>
@@ -62,14 +63,8 @@ signals:
     void targetDirectoryValueChanged(QString newTargetDir);
     void initMainWindowSourceDirectory(QString newSrcDir);
     void initMainWindowTargetDirectory(QString newTargetDir);
-    void optionsDialogMaxWidthError(QString eMsg);
-    void optionsDialogMaxHeightError(QString eMsg);
-    void optionsDialogScaleFactorError(QString eMsg);
-    void optionsDialogMaintainRatioError(QString eMsg);
-    void optionsDialogAttemptedOverwrite(QString eMsg);
-    void clearOptionsWidthError(bool good);
-    void clearOptionsHeightError(bool good);
-    void clearOptionsScaleFactorError(bool good);
+    void modelErrorSignal(OptionErrorSignalContents &errorSignal);
+    void modelClearError(OptionErrorCode clearedError);
     void enableMainWindowResizePhotosButton();
 
 private slots:

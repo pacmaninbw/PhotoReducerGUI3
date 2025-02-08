@@ -226,24 +226,49 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
     return targetDirLayout;
 }
 
-void OptionsDialog::handelLineEditError(QString eMsg, QLineEdit *badLineEdit, const unsigned int eCode)
+void OptionsDialog::handelmodelError(const OptionErrorSignalContents &eMessage)
 {
+    OptionErrorCode eCode = eMessage.errorCode;
     modelHasErrors |= eCode;
-    QMessageBox errorMessageBox;
-    errorMessageBox.critical(0,"Error:", eMsg);
-    errorMessageBox.setFixedSize(500,200);
-    badLineEdit->setStyleSheet(numericLEStyleError);
-    optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+    QWidget* badWidget = nullptr;
+
+    switch (eCode)
+    {
+        default: 
+            return;
+        case maintainRatioError:
+            return;
+        case missingSizeError:
+            return;
+        case maxWidthError:
+            badWidget = maxWidthLineEdit;
+            break;
+    }
+
+    if (badWidget)
+    {
+        badWidget->setStyleSheet(numericLEStyleError);
+    }
+
+    showErrorDisableOKButton(eMessage.errorMessage);
 }
 
-void OptionsDialog::clearErrorLineEdit(QLineEdit *correctedLineEdit, const unsigned int eCode)
+void OptionsDialog::clearModelError(const OptionErrorCode clearedError)
 {
-    modelHasErrors &= ~eCode;
-    correctedLineEdit->setStyleSheet(numericLEStyle);
+    modelHasErrors &= ~clearedError;
     if (!modelHasErrors)
     {
         optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
     }
+}
+
+void OptionsDialog::showErrorDisableOKButton(QString error)
+{
+    QMessageBox errorMessageBox;
+    errorMessageBox.critical(0,"Error:", error);
+    errorMessageBox.setFixedSize(500,200);
+
+    optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 }
 
 void OptionsDialog::dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText)

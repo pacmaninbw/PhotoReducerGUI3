@@ -115,12 +115,8 @@ void PhotoReducerController::connectModelOutToOptionDialogIn()
 {
     connect(model, &PhotoReducerModel::initOptionsValues, optionsDialog, &OptionsDialog::initOptionsValues);
 
-    connect(model, &PhotoReducerModel::optionsDialogMaxWidthError, optionsDialog, &OptionsDialog::onMaxWidthError);
-    connect(model, &PhotoReducerModel::optionsDialogMaxHeightError, optionsDialog, &OptionsDialog::onMaxHeightError);
-    connect(model, &PhotoReducerModel::optionsDialogScaleFactorError, optionsDialog, &OptionsDialog::onScaleFactorError);
-    connect(model, &PhotoReducerModel::clearOptionsWidthError, optionsDialog, &OptionsDialog::onClearWidthError);
-    connect(model, &PhotoReducerModel::clearOptionsHeightError, optionsDialog, &OptionsDialog::onClearHeightError);
-    connect(model, &PhotoReducerModel::clearOptionsScaleFactorError, optionsDialog, &OptionsDialog::onClearScaleFactorError);
+    connect(model, &PhotoReducerModel::modelErrorSignal, optionsDialog, &OptionsDialog::onModelErrorSignal);
+    connect(model, &PhotoReducerModel::modelClearError, optionsDialog, &OptionsDialog::onModelClearError);
 }
 
 /*
