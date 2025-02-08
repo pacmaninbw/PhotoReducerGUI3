@@ -20,7 +20,7 @@ PhotoReducerModel::PhotoReducerModel(const char* modelName, QObject *parent)
     setSourceDirectory(startDir);
     setTargetDirectory(startDir);
 
-    setPhotosToResizeCount(0);
+    setResizedPhotoCount(0);
     setPhotosToResizeCount(0);
 }
 

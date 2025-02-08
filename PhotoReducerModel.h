@@ -108,8 +108,8 @@ private:
 /*
  * Private Variables.
  */
-    std::size_t resizedPhotosCount;
-    std::size_t photosToResizeCount;
+    std::size_t resizedPhotosCount = 0;
+    std::size_t photosToResizeCount = 0;
     PhotoFileList photoFileList;
 /*
  * File Options.
