@@ -140,7 +140,7 @@ QGroupBox* OptionsDialog::setUpFileGroupBox()
 void  OptionsDialog::connectDialogButtons()
 {
     QObject::connect(optionsButtonBox, &QDialogButtonBox::accepted,
-        this, qOverload<>(&QDialog::accept));
+        this, &OptionsDialog::onAccept);
         
     QObject::connect(optionsButtonBox, &QDialogButtonBox::rejected,
         this, qOverload<>(&QDialog::reject));
@@ -228,7 +228,7 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
 
 void OptionsDialog::handelLineEditError(QString eMsg, QLineEdit *badLineEdit, const unsigned int eCode)
 {
-    modelHasErrors += eCode;
+    modelHasErrors |= eCode;
     QMessageBox errorMessageBox;
     errorMessageBox.critical(0,"Error:", eMsg);
     errorMessageBox.setFixedSize(500,200);
@@ -238,8 +238,12 @@ void OptionsDialog::handelLineEditError(QString eMsg, QLineEdit *badLineEdit, co
 
 void OptionsDialog::clearErrorLineEdit(QLineEdit *correctedLineEdit, const unsigned int eCode)
 {
-    modelHasErrors -= eCode;
+    modelHasErrors &= ~eCode;
     correctedLineEdit->setStyleSheet(numericLEStyle);
+    if (!modelHasErrors)
+    {
+        optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+    }
 }
 
 void OptionsDialog::dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText)
@@ -257,17 +261,16 @@ void OptionsDialog::dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const cha
 /*
  * Slots for the widgets.
  */
-void OptionsDialog::closeEvent(QCloseEvent* cEvent)
+void OptionsDialog::onAccept()
 {
     if (modelHasErrors)
     {
-        cEvent->ignore(); // Prevent closing
         QMessageBox::warning(this, "Errors", "Please correct the errors highlighted in yellow before closing.");
     }
     else
     {
-        QDialog::closeEvent(cEvent);
         emit optionsGoodFindFiles();
+        accept();
     }
 }
 

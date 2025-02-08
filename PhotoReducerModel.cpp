@@ -47,7 +47,7 @@ void PhotoReducerModel::setPhotosToResizeCount(std::size_t newValue)
 {
     if (newValue != photosToResizeCount) {
         photosToResizeCount = newValue;
-        emit resizedPhotosCountValueChanged(photosToResizeCount);
+        emit photosToResizeCountValueChanged(photosToResizeCount);
     }
 }
 
@@ -113,6 +113,11 @@ void PhotoReducerModel::initializeOptionsDialog()
     modelValues.scaleFactor = scaleFactor;
 
     emit initOptionsValues(modelValues);
+}
+
+void PhotoReducerModel::resizeAllPhotos()
+{
+    resizeAllPhotosInList();
 }
 
 void PhotoReducerModel::optionsSourceDirectoryEdited(QString newSrcDir)
@@ -201,6 +206,7 @@ void PhotoReducerModel::buildPhotoInputAndOutputList()
         fs::path targetDir = targetDirectory;
         photoFileList = copyInFileNamesToPhotoListAddOutFileNames(inputPhotoList, targetDir);
         setPhotosToResizeCount(photoFileList.size());
+        emit enableMainWindowResizePhotosButton();
     }
 }
 

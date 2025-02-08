@@ -34,7 +34,6 @@ void PhotoReducerController::connectModelAndMainWindowSignalsToSlots()
         mainWindow, &MainWindow::on_SourceDirectory_Changed);
     connect(model, &PhotoReducerModel::targetDirectoryValueChanged,
         mainWindow, &MainWindow::on_TargetDirectory_Changed);
-
 }
 
 void PhotoReducerController::connectControllerAndModelSignalsToSlots()
@@ -43,12 +42,20 @@ void PhotoReducerController::connectControllerAndModelSignalsToSlots()
         model, &PhotoReducerModel::initializeMainWindow);
     connect(this, &PhotoReducerController::optionDialogReadyForInitialization,
         model, &PhotoReducerModel::initializeOptionsDialog);
+    connect(this, &PhotoReducerController::resizeAllPhotos,
+            model, &PhotoReducerModel::resizeAllPhotos);
+    connect(model, &PhotoReducerModel::enableMainWindowResizePhotosButton, this,
+        &PhotoReducerController::enableMainWindowResizePhotosButton);
 }
 
 void PhotoReducerController::connectControllerAndMainWindowSignalsToSlots()
 {
     connect(mainWindow, &MainWindow::mainWindowOptionsButtonPressed, this,
         &PhotoReducerController::mainWindowOptionsButtonPressedCreateOptionsDialog);
+    connect(mainWindow, &MainWindow::resizeAllPhotos, this,
+        &PhotoReducerController::mainWindowResizePhotosButtonClicked);
+    connect(this, &PhotoReducerController::enablePhotoResizing, mainWindow,
+        &MainWindow::enableResizePhotosButton);
 }
 
 void PhotoReducerController::initMainWindowValuesAndShow()

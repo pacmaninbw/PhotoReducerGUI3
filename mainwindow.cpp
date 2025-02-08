@@ -1,5 +1,6 @@
 #include "createNamedQTWidget.h"
 #include "mainwindow.h"
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -45,6 +46,7 @@ void MainWindow::on_optionsPushButton_Clicked()
 
 void MainWindow::on_resizePhotosButton_Clicked()
 {
+    emit resizeAllPhotos();
 }
 
 /*

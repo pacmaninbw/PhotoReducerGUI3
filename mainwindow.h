@@ -31,9 +31,11 @@ public slots:
     void on_photosToResizeCount_ValueChanged(std::size_t photosToResize);
     void on_SourceDirectory_Changed(QString srcDir);
     void on_TargetDirectory_Changed(QString targetDir);
+    void enableResizePhotosButton() { resizePhotosButton->setEnabled(true); };
 
 signals:
     void mainWindowOptionsButtonPressed(bool doINeedSignalContents);
+    void resizeAllPhotos();
 
 private slots:
     void on_optionsPushButton_Clicked();

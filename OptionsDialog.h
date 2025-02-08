@@ -50,7 +50,7 @@ signals:
     void optionsGoodFindFiles();
 
 private slots:
-    void closeEvent(QCloseEvent* event) override;
+    void onAccept();
     void on_sourceDirBrowsePushButton_clicked() { dirBrowsePushButtonClicked(sourceDirectoryLineEdit, "Source"); };
     void on_targetDirectoryLineEdit_textChanged() { emit targetDirectoryLEChanged(targetDirectoryLineEdit->text()); };
     void on_sourceDirectoryLineEdit_textChanged() { emit sourceDirectoryLEChanged(sourceDirectoryLineEdit->text()); };

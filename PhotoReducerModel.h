@@ -32,6 +32,7 @@ public:
 public slots:
     void initializeMainWindow();
     void initializeOptionsDialog();
+    void resizeAllPhotos();
 /*
  * File options slots.
  */
@@ -69,6 +70,7 @@ signals:
     void clearOptionsWidthError(bool good);
     void clearOptionsHeightError(bool good);
     void clearOptionsScaleFactorError(bool good);
+    void enableMainWindowResizePhotosButton();
 
 private slots:
 
