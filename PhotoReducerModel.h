@@ -78,6 +78,7 @@ private:
     void setSourceDirectory(QString newSrcDir);
     void setTargetDirectory(QString newTargetDir);
     int qstringToInt(QString possibleNumber);
+    bool hasMaintainRatioErrors();
 
     // Get all the photo files in the source directory the user specified.
     // Apply any name changes to the outout files.

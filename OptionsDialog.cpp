@@ -230,25 +230,8 @@ void OptionsDialog::handelmodelError(const OptionErrorSignalContents &eMessage)
 {
     OptionErrorCode eCode = eMessage.errorCode;
     modelHasErrors |= eCode;
-    QWidget* badWidget = nullptr;
 
-    switch (eCode)
-    {
-        default: 
-            return;
-        case maintainRatioError:
-            return;
-        case missingSizeError:
-            return;
-        case maxWidthError:
-            badWidget = maxWidthLineEdit;
-            break;
-    }
-
-    if (badWidget)
-    {
-        badWidget->setStyleSheet(numericLEStyleError);
-    }
+    widgetHighlightError(eCode, true);
 
     showErrorDisableOKButton(eMessage.errorMessage);
 }
@@ -256,6 +239,9 @@ void OptionsDialog::handelmodelError(const OptionErrorSignalContents &eMessage)
 void OptionsDialog::clearModelError(const OptionErrorCode clearedError)
 {
     modelHasErrors &= ~clearedError;
+
+    widgetHighlightError(clearedError, false);
+
     if (!modelHasErrors)
     {
         optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
@@ -269,6 +255,65 @@ void OptionsDialog::showErrorDisableOKButton(QString error)
     errorMessageBox.setFixedSize(500,200);
 
     optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+}
+
+void OptionsDialog::widgetHighlightError(const OptionErrorCode error, bool highlight)
+{
+    QWidget* widgetToChange = nullptr;
+
+    switch (error)
+    {
+        default: 
+            showErrorDisableOKButton("Unknown error code!");
+            return;
+        case maintainRatioError:
+        // The maintain ratio error indicates that both width and height have
+        // been specified which can cause ratio errors.
+            handleMaintainRatioError(highlight);
+            return;
+        case missingSizeError:
+            handleMissingSizeError(highlight);
+            return;
+        case maxWidthError:
+            widgetToChange = maxWidthLineEdit;
+            break;
+        case maxHeightError:
+            widgetToChange = maxHeightLineEdit;
+            break;
+        case scaleFactorError:
+            widgetToChange = scaleFactorLineEdit;
+            break;
+    }
+
+    if (widgetToChange)
+    {
+        widgetToChange->setStyleSheet(highlight? numericLEStyleError : numericLEStyle);
+    }
+}
+
+/*
+ * Multiple widgets need to be changed.
+ */
+void OptionsDialog::handleMaintainRatioError(bool isError)
+{
+    const char* newStyle = isError? numericLEStyleError : numericLEStyle;
+
+    maintainRatioCheckBox->setStyleSheet(isError? "background-color: yellow;" :
+        "background-color: none;");
+    maxWidthLineEdit->setStyleSheet(newStyle);
+    maxHeightLineEdit->setStyleSheet(newStyle);
+}
+
+/*
+ * Multiple widgets need to be changed.
+ */
+void OptionsDialog::handleMissingSizeError(bool isError)
+{
+    const char* newStyle = isError? numericLEStyleError : numericLEStyle;
+
+    maxWidthLineEdit->setStyleSheet(newStyle);
+    maxHeightLineEdit->setStyleSheet(newStyle);
+    scaleFactorLineEdit->setStyleSheet(newStyle);
 }
 
 void OptionsDialog::dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText)

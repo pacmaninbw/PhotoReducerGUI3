@@ -85,6 +85,24 @@ int PhotoReducerModel::qstringToInt(QString possibleNumber)
     return output;
 }
 
+bool PhotoReducerModel::hasMaintainRatioErrors()
+{
+    if (maintainRatio && maxWidth && maxHeight)
+    {
+        OptionErrorSignalContents eMessage;
+        eMessage.errorCode = maintainRatioError;
+        eMessage.errorMessage = "To maintain the ratio of the picture, only "
+            "one of Max Width or Max Height may be specified!";
+        emit modelErrorSignal(eMessage);
+        return true;
+    }
+    else
+    {
+        emit modelClearError(maintainRatioError);
+    }
+
+    return false;
+}
 
 /*
  * Slots
@@ -138,7 +156,10 @@ void PhotoReducerModel::optionsMaxWidthChanged(QString maxWidthQS)
         if (width > 0)
         {
             maxWidth = width;
-            emit modelClearError(maxWidthError);
+            if (!hasMaintainRatioErrors())
+            {
+                emit modelClearError(maxWidthError);
+            }
         }
         else
         {
@@ -146,6 +167,15 @@ void PhotoReducerModel::optionsMaxWidthChanged(QString maxWidthQS)
             errorSignal.errorCode = maxWidthError;
             errorSignal.errorMessage = "Max Width must be an integer value greater than zero!";
             emit modelErrorSignal(errorSignal);
+        }
+    }
+    else
+    {
+        // if max width was previously set
+        if (maintainRatio && maxWidth && maxHeight)
+        {
+            maxWidth = 0;
+            emit modelClearError(maintainRatioError);
         }
     }
 }
@@ -158,7 +188,10 @@ void PhotoReducerModel::optionsMaxHeightChanged(QString maxHeightQS)
         if (height > 0)
         {
             maxHeight = height;
-            emit modelClearError(maxHeightError);
+            if (!hasMaintainRatioErrors())
+            {
+                emit modelClearError(maxHeightError);
+            }
         }
         else
         {
@@ -166,6 +199,15 @@ void PhotoReducerModel::optionsMaxHeightChanged(QString maxHeightQS)
             errorSignal.errorCode = maxHeightError;
             errorSignal.errorMessage = "Max Height must be an integer value greater than zero!";
             emit modelErrorSignal(errorSignal);
+        }
+    }
+    else
+    {
+        // if max width was previously set
+        if (maintainRatio && maxWidth && maxHeight)
+        {
+            maxHeight = 0;
+            emit modelClearError(maintainRatioError);
         }
     }
 }
