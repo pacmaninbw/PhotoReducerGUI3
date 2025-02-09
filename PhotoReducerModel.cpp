@@ -73,10 +73,9 @@ void PhotoReducerModel::setTargetDirectory(QString newTargetDir)
 
 int PhotoReducerModel::qstringToInt(QString possibleNumber)
 {
-    int output = 0;
     bool ok;
 
-    output = static_cast<std::size_t>(possibleNumber.toInt(&ok, 10));
+    int output = static_cast<std::size_t>(possibleNumber.toInt(&ok, 10));
     if (!ok)
     {
         output = -1;
@@ -85,15 +84,20 @@ int PhotoReducerModel::qstringToInt(QString possibleNumber)
     return output;
 }
 
-bool PhotoReducerModel::hasMaintainRatioErrors()
+void PhotoReducerModel::sendErrorSignal(OptionErrorCode code, QString eMessage)
+{
+    OptionErrorSignalContents eSignalContents;
+    eSignalContents.errorCode = maintainRatioError;
+    eSignalContents.errorMessage = eMessage;
+    emit modelErrorSignal(eSignalContents);
+}
+
+bool PhotoReducerModel::checkMaintainRatioErrors()
 {
     if (maintainRatio && maxWidth && maxHeight)
     {
-        OptionErrorSignalContents eMessage;
-        eMessage.errorCode = maintainRatioError;
-        eMessage.errorMessage = "To maintain the ratio of the picture, only "
-            "one of Max Width or Max Height may be specified!";
-        emit modelErrorSignal(eMessage);
+        sendErrorSignal(maintainRatioError, "To maintain the ratio of the picture, "
+            "only one of Max Width or Max Height may be specified!");
         return true;
     }
     else
@@ -102,6 +106,56 @@ bool PhotoReducerModel::hasMaintainRatioErrors()
     }
 
     return false;
+}
+
+bool PhotoReducerModel::clearMaintainRatioErrorIfSet()
+{
+    if (maintainRatio && maxWidth && maxHeight)
+    {
+        emit modelClearError(maintainRatioError);
+        return true;
+    }
+
+    return false;
+}
+
+void PhotoReducerModel::photoSizeValueError(OptionErrorCode code, QString dimension)
+{
+    QString errorText = "Max " + dimension + " must be an integer value greater than zero!";
+    sendErrorSignal(code, errorText);
+}
+
+std::size_t PhotoReducerModel::processPhotoDimension(QString value, QString dimension, OptionErrorCode code)
+{
+    int newValue = 0;
+
+    if (value.isEmpty())
+    {
+        // if value was previously set and this is correcting an error
+        clearMaintainRatioErrorIfSet();
+    }
+    else
+    {
+        newValue = qstringToInt(value);
+        if (newValue > 0)
+        {
+            if (!checkMaintainRatioErrors())
+            {
+                emit modelClearError(code);
+            }
+        }
+        else
+        {
+            // if value was previously set and this is correcting an error
+            if (!(newValue == 0 && clearMaintainRatioErrorIfSet()))
+            {
+                photoSizeValueError(code, dimension);
+            }
+            newValue = 0;
+        }
+    }
+
+    return static_cast<std::size_t>(newValue);
 }
 
 /*
@@ -138,6 +192,29 @@ void PhotoReducerModel::resizeAllPhotos()
     resizeAllPhotosInList();
 }
 
+void PhotoReducerModel::validateOptionsDialog()
+{
+    if (!maxWidth && !maxHeight && !scaleFactor)
+    {
+        sendErrorSignal(missingSizeError, "Please provide a new size for the photo!");
+    }
+    else if (!checkMaintainRatioErrors())
+    {
+        buildPhotoInputAndOutputList();
+        if (attemptedOverwrites)
+        {
+            QString overwriteMsg = QString::number(attemptedOverwrites);
+            overwriteMsg += " photos will not be resized because existing files "
+            "would be overwritten. To overwrite these files open the options"
+            " dialog and click the Overwrite checkbox";
+            QMessageBox warningMessageBox;
+            warningMessageBox.warning(0,"Warning:", overwriteMsg);
+            warningMessageBox.setFixedSize(500,200);
+        }
+        emit acceptOptionsDialog();
+    }
+}
+
 void PhotoReducerModel::optionsSourceDirectoryEdited(QString newSrcDir)
 {
     setSourceDirectory(newSrcDir);
@@ -150,66 +227,14 @@ void PhotoReducerModel::optionsTargetDirectoryEdited(QString newTargetDir)
 
 void PhotoReducerModel::optionsMaxWidthChanged(QString maxWidthQS)
 {
-    if (!maxWidthQS.isEmpty())
-    {
-        int width = qstringToInt(maxWidthQS);
-        if (width > 0)
-        {
-            maxWidth = width;
-            if (!hasMaintainRatioErrors())
-            {
-                emit modelClearError(maxWidthError);
-            }
-        }
-        else
-        {
-            OptionErrorSignalContents errorSignal;
-            errorSignal.errorCode = maxWidthError;
-            errorSignal.errorMessage = "Max Width must be an integer value greater than zero!";
-            emit modelErrorSignal(errorSignal);
-        }
-    }
-    else
-    {
-        // if max width was previously set
-        if (maintainRatio && maxWidth && maxHeight)
-        {
-            maxWidth = 0;
-            emit modelClearError(maintainRatioError);
-        }
-    }
+    maxWidth = processPhotoDimension(maxWidthQS, "Width", maxWidthError);
+    checkMaintainRatioErrors();
 }
 
 void PhotoReducerModel::optionsMaxHeightChanged(QString maxHeightQS)
 {
-    if (!maxHeightQS.isEmpty())
-    {
-        int height = qstringToInt(maxHeightQS);
-        if (height > 0)
-        {
-            maxHeight = height;
-            if (!hasMaintainRatioErrors())
-            {
-                emit modelClearError(maxHeightError);
-            }
-        }
-        else
-        {
-            OptionErrorSignalContents errorSignal;
-            errorSignal.errorCode = maxHeightError;
-            errorSignal.errorMessage = "Max Height must be an integer value greater than zero!";
-            emit modelErrorSignal(errorSignal);
-        }
-    }
-    else
-    {
-        // if max width was previously set
-        if (maintainRatio && maxWidth && maxHeight)
-        {
-            maxHeight = 0;
-            emit modelClearError(maintainRatioError);
-        }
-    }
+    maxHeight = processPhotoDimension(maxHeightQS, "Height", maxHeightError);
+    checkMaintainRatioErrors();
 }
 
 void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
@@ -217,18 +242,17 @@ void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
     if (!scaleFactorQS.isEmpty())
     {
         int testscaleFactor = qstringToInt(scaleFactorQS);
-        if (testscaleFactor > 20 && testscaleFactor < 90)
+        if (testscaleFactor >= minScaleFactor && testscaleFactor <= maxScaleFactor)
         {
             scaleFactor = testscaleFactor;
             emit modelClearError(scaleFactorError);
         }
         else
         {
-            OptionErrorSignalContents errorSignal;
-            errorSignal.errorCode = scaleFactorError;
-            errorSignal.errorMessage = "Scale Factor must be an integer value"
-                " greater than 20 and less than 90!";
-            emit modelErrorSignal(errorSignal);
+            QString eText = "Scale Factor must be an integer value between " + 
+                QString::number(minScaleFactor) + " and " +
+                QString::number(minScaleFactor);
+            sendErrorSignal(scaleFactorError, eText);
         }
     }
 }

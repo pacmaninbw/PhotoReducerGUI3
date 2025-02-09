@@ -32,6 +32,7 @@ public slots:
     void mainWindowOptionsButtonPressedCreateOptionsDialog(bool doINeedSignalContents);
     void mainWindowResizePhotosButtonClicked() { emit resizeAllPhotos(); };
     void enableMainWindowResizePhotosButton() { emit enablePhotoResizing(); };
+    void acceptOptionsDialog();
 
 signals:
     void mainWindowReadyForInitialization();

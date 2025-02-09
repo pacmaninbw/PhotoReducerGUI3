@@ -27,7 +27,7 @@ public:
 
 public slots:
     void initOptionsValues(OptionsInitStruct modelValues);
-    void onModelErrorSignal(OptionErrorSignalContents eMessage) { handelmodelError(eMessage); };
+    void onModelErrorSignal(OptionErrorSignalContents eMessage) { handelModelError(eMessage); };
     void onModelClearError(OptionErrorCode clearedError) { clearModelError(clearedError); };
 
 signals:
@@ -44,6 +44,7 @@ signals:
     void optionsMaxWidthLEChanged(QString maxWidthQS);
     void optionsMaxHeightLEChanged(QString maxHeightQS);
     void optionsScaleFactorLEChanged(QString scaleFactorQS);
+    void validateOptionsDialog();
     void optionsGoodFindFiles();
 
 private slots:
@@ -67,7 +68,7 @@ private:
     QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);    
     QHBoxLayout* layOutSourceDirectory();
     QHBoxLayout* layOutTargetDirectory();
-    void handelmodelError(const OptionErrorSignalContents &eMessage);
+    void handelModelError(const OptionErrorSignalContents &eMessage);
     void clearModelError(const OptionErrorCode clearedError);
     void showErrorDisableOKButton(QString error);
     void widgetHighlightError(const OptionErrorCode error, bool highlight);

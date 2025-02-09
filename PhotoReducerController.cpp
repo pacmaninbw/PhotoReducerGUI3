@@ -46,6 +46,8 @@ void PhotoReducerController::connectControllerAndModelSignalsToSlots()
             model, &PhotoReducerModel::resizeAllPhotos);
     connect(model, &PhotoReducerModel::enableMainWindowResizePhotosButton, this,
         &PhotoReducerController::enableMainWindowResizePhotosButton);
+    connect(model, &PhotoReducerModel::acceptOptionsDialog,
+        this, &PhotoReducerController::acceptOptionsDialog);
 }
 
 void PhotoReducerController::connectControllerAndMainWindowSignalsToSlots()
@@ -109,7 +111,9 @@ void PhotoReducerController::connectOptionDialogOutToModelIn()
 
     connect(optionsDialog, &OptionsDialog::optionsGoodFindFiles,
         model, &PhotoReducerModel::optionsGoodFindFiles);
-}
+        connect(optionsDialog, &OptionsDialog::validateOptionsDialog,
+            model, &PhotoReducerModel::validateOptionsDialog);
+    }
 
 void PhotoReducerController::connectModelOutToOptionDialogIn()
 {
@@ -129,6 +133,11 @@ void PhotoReducerController::mainWindowOptionsButtonPressedCreateOptionsDialog(b
     connectModelAndOptionsDialogSignalsToSlots();
     emit optionDialogReadyForInitialization();
     optionsDialog->show();
+}
+
+void PhotoReducerController::acceptOptionsDialog()
+{
+    optionsDialog->accept();
 }
 
 

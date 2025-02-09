@@ -34,6 +34,7 @@ public slots:
     void initializeMainWindow();
     void initializeOptionsDialog();
     void resizeAllPhotos();
+    void validateOptionsDialog();
 /*
  * File options slots.
  */
@@ -66,6 +67,7 @@ signals:
     void modelErrorSignal(OptionErrorSignalContents &errorSignal);
     void modelClearError(OptionErrorCode clearedError);
     void enableMainWindowResizePhotosButton();
+    void acceptOptionsDialog();
 
 private slots:
 
@@ -78,7 +80,11 @@ private:
     void setSourceDirectory(QString newSrcDir);
     void setTargetDirectory(QString newTargetDir);
     int qstringToInt(QString possibleNumber);
-    bool hasMaintainRatioErrors();
+    void sendErrorSignal(OptionErrorCode code, QString eMessage);
+    bool checkMaintainRatioErrors();
+    bool clearMaintainRatioErrorIfSet();
+    void photoSizeValueError(OptionErrorCode code, QString dimension);
+    std::size_t processPhotoDimension(QString value, QString dimension, OptionErrorCode code);
 
     // Get all the photo files in the source directory the user specified.
     // Apply any name changes to the outout files.
@@ -128,6 +134,9 @@ private:
     std::size_t maxHeight = 0;
     unsigned int scaleFactor = 0;
     std::size_t attemptedOverwrites = 0;
+
+    const unsigned int minScaleFactor = 20;
+    const unsigned int maxScaleFactor = 90;
 };
 
 #endif // PHOTOREDUCERMODEL_H_

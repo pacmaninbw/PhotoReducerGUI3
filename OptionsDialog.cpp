@@ -226,7 +226,7 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
     return targetDirLayout;
 }
 
-void OptionsDialog::handelmodelError(const OptionErrorSignalContents &eMessage)
+void OptionsDialog::handelModelError(const OptionErrorSignalContents &eMessage)
 {
     OptionErrorCode eCode = eMessage.errorCode;
     modelHasErrors |= eCode;
@@ -339,8 +339,7 @@ void OptionsDialog::onAccept()
     }
     else
     {
-        emit optionsGoodFindFiles();
-        accept();
+        emit validateOptionsDialog();
     }
 }
 
