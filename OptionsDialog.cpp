@@ -201,12 +201,8 @@ QHBoxLayout *OptionsDialog::layOutSourceDirectory()
     QHBoxLayout *srcDirLayout = new QHBoxLayout;
     srcDirLayout->setObjectName("srcDirLayout");
 
-    sourceDirectoryLineEdit = createDirectoryLineEdit("sourceDirectoryLineEdit");
+    sourceDirectoryLineEdit = new DirectoryLineEdit("sourceDirectoryLineEdit", "Source Directory", directorLEWidth, this);
     srcDirLayout->addWidget(sourceDirectoryLineEdit);
-
-    sourceDirBrowsePushButton = createNameQTWidgetWithText<QPushButton>(
-        "Browse", "sourceDirBrowsePushButton", this);
-    srcDirLayout->addWidget(sourceDirBrowsePushButton);
 
     return srcDirLayout;
 }
@@ -216,12 +212,9 @@ QHBoxLayout *OptionsDialog::layOutTargetDirectory()
     QHBoxLayout *targetDirLayout = new QHBoxLayout();
     targetDirLayout->setObjectName("targetDirLayout");
 
-    targetDirectoryLineEdit = createDirectoryLineEdit("targetDirectoryLineEdit");
-    targetDirectoryBrowsePushButton = createNameQTWidgetWithText<QPushButton>(
-        "Browse", "targetDirectoryBrowsePushButton", this);
+    targetDirectoryLineEdit = new DirectoryLineEdit("targetDirectoryLineEdit", "Target Directory", directorLEWidth, this);
 
     targetDirLayout->addWidget(targetDirectoryLineEdit);
-    targetDirLayout->addWidget(targetDirectoryBrowsePushButton);
 
     return targetDirLayout;
 }

@@ -1,6 +1,7 @@
 #ifndef OPTIONSDIALOG_H_
 #define OPTIONSDIALOG_H_
 
+#include "DirectoryLineEdit.h"
 #include "OptionErrorCode.h"
 #include "OptionsInitStruct.h"
 #include <QVariant>
@@ -88,11 +89,9 @@ private:
     QCheckBox* PNGFileTypecheckBox;
     QCheckBox* fixFileNameCheckBox;
     QCheckBox* overwriteCheckBox;
-    QLineEdit* sourceDirectoryLineEdit;
-    QLineEdit* targetDirectoryLineEdit;
+    DirectoryLineEdit* sourceDirectoryLineEdit;
+    DirectoryLineEdit* targetDirectoryLineEdit;
     QLineEdit* addExtensionLineEdit;
-    QPushButton* sourceDirBrowsePushButton;
-    QPushButton* targetDirectoryBrowsePushButton;
     QGroupBox* photoOptionsBox;
     QCheckBox* maintainRatioCheckBox;
     QCheckBox* displayResizedCheckBox;
@@ -109,6 +108,7 @@ private:
     const char* numericLEStyle = "width: 60px; background-color: white;";
     const char* numericLEStyleError = "width: 60px; background-color: yellow;";
     const char* directoryLEStyle = "width: 400px;";
+    const int directorLEWidth = 400;
 
     OptionErrorCode modelHasErrors = 0;
 };

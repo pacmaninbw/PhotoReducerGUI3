@@ -1,25 +1,25 @@
-#include "PhotoReducerController.h"
+#include "SignalRouterController.h"
 #include <QString>
 
-PhotoReducerController::PhotoReducerController(const char* modelName, QObject *parent)
+SignalRouterController::SignalRouterController(const char* objectName, QObject *parent)
     : QObject{parent}
 {
-    setObjectName(QString::fromUtf8(modelName));
+    setObjectName(QString::fromUtf8(objectName));
 
 }
 
-void PhotoReducerController::createModel()
+void SignalRouterController::createModel()
 {
     model = new PhotoReducerModel("TheModel", this);
 }
 
-void PhotoReducerController::creatMainWindow()
+void SignalRouterController::creatMainWindow()
 {
     mainWindow = new MainWindow();
     mainWindow->setObjectName("MainWindow");
 }
 
-void PhotoReducerController::connectModelAndMainWindowSignalsToSlots()
+void SignalRouterController::connectModelAndMainWindowSignalsToSlots()
 {
     connect(model, &PhotoReducerModel::initMainWindowSourceDirectory,
         mainWindow, &MainWindow::on_SourceDirectory_Changed);
@@ -36,37 +36,37 @@ void PhotoReducerController::connectModelAndMainWindowSignalsToSlots()
         mainWindow, &MainWindow::on_TargetDirectory_Changed);
 }
 
-void PhotoReducerController::connectControllerAndModelSignalsToSlots()
+void SignalRouterController::connectControllerAndModelSignalsToSlots()
 {
-    connect(this, &PhotoReducerController::mainWindowReadyForInitialization,
+    connect(this, &SignalRouterController::mainWindowReadyForInitialization,
         model, &PhotoReducerModel::initializeMainWindow);
-    connect(this, &PhotoReducerController::optionDialogReadyForInitialization,
+    connect(this, &SignalRouterController::optionDialogReadyForInitialization,
         model, &PhotoReducerModel::initializeOptionsDialog);
-    connect(this, &PhotoReducerController::resizeAllPhotos,
+    connect(this, &SignalRouterController::resizeAllPhotos,
             model, &PhotoReducerModel::resizeAllPhotos);
     connect(model, &PhotoReducerModel::enableMainWindowResizePhotosButton, this,
-        &PhotoReducerController::enableMainWindowResizePhotosButton);
+        &SignalRouterController::enableMainWindowResizePhotosButton);
     connect(model, &PhotoReducerModel::acceptOptionsDialog,
-        this, &PhotoReducerController::acceptOptionsDialog);
+        this, &SignalRouterController::acceptOptionsDialog);
 }
 
-void PhotoReducerController::connectControllerAndMainWindowSignalsToSlots()
+void SignalRouterController::connectControllerAndMainWindowSignalsToSlots()
 {
     connect(mainWindow, &MainWindow::mainWindowOptionsButtonPressed, this,
-        &PhotoReducerController::mainWindowOptionsButtonPressedCreateOptionsDialog);
+        &SignalRouterController::mainWindowOptionsButtonPressedCreateOptionsDialog);
     connect(mainWindow, &MainWindow::resizeAllPhotos, this,
-        &PhotoReducerController::mainWindowResizePhotosButtonClicked);
-    connect(this, &PhotoReducerController::enablePhotoResizing, mainWindow,
+        &SignalRouterController::mainWindowResizePhotosButtonClicked);
+    connect(this, &SignalRouterController::enablePhotoResizing, mainWindow,
         &MainWindow::enableResizePhotosButton);
 }
 
-void PhotoReducerController::initMainWindowValuesAndShow()
+void SignalRouterController::initMainWindowValuesAndShow()
 {
     emit mainWindowReadyForInitialization();
     mainWindow->show();
 }
 
-void PhotoReducerController::connectModelAndOptionsDialogSignalsToSlots()
+void SignalRouterController::connectModelAndOptionsDialogSignalsToSlots()
 {
     connectOptionDialogOutToModelIn();
     connectModelOutToOptionDialogIn();
@@ -79,7 +79,7 @@ void PhotoReducerController::connectModelAndOptionsDialogSignalsToSlots()
  * unfortunately signals and slots are only partially implemented at
  * compile time and it generated compilation errors.
  */
-void PhotoReducerController::connectOptionDialogOutToModelIn()
+void SignalRouterController::connectOptionDialogOutToModelIn()
 {
     // File Options
     connect(optionsDialog, &OptionsDialog::sourceDirectoryLEChanged,
@@ -113,7 +113,7 @@ void PhotoReducerController::connectOptionDialogOutToModelIn()
             model, &PhotoReducerModel::validateOptionsDialog);
     }
 
-void PhotoReducerController::connectModelOutToOptionDialogIn()
+void SignalRouterController::connectModelOutToOptionDialogIn()
 {
     connect(model, &PhotoReducerModel::initOptionsValues, optionsDialog, &OptionsDialog::initOptionsValues);
 
@@ -125,7 +125,7 @@ void PhotoReducerController::connectModelOutToOptionDialogIn()
 /*
  * Slots
  */
-void PhotoReducerController::mainWindowOptionsButtonPressedCreateOptionsDialog(bool doINeedSignalContents)
+void SignalRouterController::mainWindowOptionsButtonPressedCreateOptionsDialog(bool doINeedSignalContents)
 {
     optionsDialog = new OptionsDialog(mainWindow);
     optionsDialog->setObjectName("optionsDialog");
@@ -134,7 +134,7 @@ void PhotoReducerController::mainWindowOptionsButtonPressedCreateOptionsDialog(b
     optionsDialog->show();
 }
 
-void PhotoReducerController::acceptOptionsDialog()
+void SignalRouterController::acceptOptionsDialog()
 {
     optionsDialog->accept();
 }

@@ -1,4 +1,4 @@
-#include "PhotoReducerController.h"
+#include "SignalRouterController.h"
 
 #include <QApplication>
 
@@ -6,13 +6,13 @@ int main(int argc, char *argv[])
 {
     QApplication theApp(argc, argv);
 
-    PhotoReducerController controller("TheController");
-    controller.createModel();
-    controller.connectControllerAndModelSignalsToSlots();
-    controller.creatMainWindow();
-    controller.connectModelAndMainWindowSignalsToSlots();
-    controller.connectControllerAndMainWindowSignalsToSlots();
-    controller.initMainWindowValuesAndShow();
+    SignalRouterController routerController("TheController");
+    routerController.createModel();
+    routerController.connectControllerAndModelSignalsToSlots();
+    routerController.creatMainWindow();
+    routerController.connectModelAndMainWindowSignalsToSlots();
+    routerController.connectControllerAndMainWindowSignalsToSlots();
+    routerController.initMainWindowValuesAndShow();
     
     
     return theApp.exec();

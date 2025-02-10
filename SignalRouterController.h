@@ -1,5 +1,5 @@
-#ifndef PHOTOREDUCERCONTROLLER_H_
-#define PHOTOREDUCERCONTROLLER_H_
+#ifndef SIGNALROUTERCONTROLLER_H_
+#define SIGNALROUTERCONTROLLER_H_
 
 #include "mainwindow.h"
 #include "PhotoReducerModel.h"
@@ -14,13 +14,13 @@
  * 
  * Signals to create new views are handled by this class.
  */
-class PhotoReducerController: public QObject
+class SignalRouterController: public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PhotoReducerController(const char * controllerName, QObject *parent = nullptr);
-    ~PhotoReducerController() = default;
+    explicit SignalRouterController(const char * controllerName, QObject *parent = nullptr);
+    ~SignalRouterController() = default;
     void createModel();
     void creatMainWindow();
     void connectModelAndMainWindowSignalsToSlots();
@@ -55,6 +55,6 @@ private:
     OptionsDialog* optionsDialog;
 };
 
-#endif // PHOTOREDUCERCONTROLLER_H_
+#endif // SIGNALROUTERCONTROLLER_H_
 
 
