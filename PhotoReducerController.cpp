@@ -109,8 +109,6 @@ void PhotoReducerController::connectOptionDialogOutToModelIn()
     connect(optionsDialog, &OptionsDialog::optionsScaleFactorLEChanged,
         model, &PhotoReducerModel::optionsScaleFactorChanged);
 
-    connect(optionsDialog, &OptionsDialog::optionsGoodFindFiles,
-        model, &PhotoReducerModel::optionsGoodFindFiles);
         connect(optionsDialog, &OptionsDialog::validateOptionsDialog,
             model, &PhotoReducerModel::validateOptionsDialog);
     }
@@ -121,6 +119,7 @@ void PhotoReducerController::connectModelOutToOptionDialogIn()
 
     connect(model, &PhotoReducerModel::modelErrorSignal, optionsDialog, &OptionsDialog::onModelErrorSignal);
     connect(model, &PhotoReducerModel::modelClearError, optionsDialog, &OptionsDialog::onModelClearError);
+    connect(model, &PhotoReducerModel::highlightOverWriteCB, optionsDialog, &OptionsDialog::highlightOverwriteCB);
 }
 
 /*

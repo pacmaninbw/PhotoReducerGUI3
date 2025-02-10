@@ -43,9 +43,12 @@ public slots:
     void optionsJPGCheckBoxChanged(bool checked) { processJPGFiles = checked; };
     void optionsPNGCheckBoxChanged(bool checked) { processPNGFiles = checked; };
     void optionsSafeWebNameChanged(bool checked) { fixFileName = checked; };
-    void optionsOverWriteFilesChanged(bool checked) { overWriteFiles = checked; };
+    void optionsOverWriteFilesChanged(bool checked)
+    {
+        overWriteFiles = checked;
+        emit highlightOverWriteCB(false);
+    };
     void optionsAddExtensionChanged(QString extension);
-    void optionsGoodFindFiles();
 /*
  * Photo options slots.
  */
@@ -67,6 +70,7 @@ signals:
     void modelErrorSignal(OptionErrorSignalContents &errorSignal);
     void modelClearError(OptionErrorCode clearedError);
     void enableMainWindowResizePhotosButton();
+    void highlightOverWriteCB(bool highlight);
     void acceptOptionsDialog();
 
 private slots:

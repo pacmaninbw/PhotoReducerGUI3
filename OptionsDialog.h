@@ -29,6 +29,11 @@ public slots:
     void initOptionsValues(OptionsInitStruct modelValues);
     void onModelErrorSignal(OptionErrorSignalContents eMessage) { handelModelError(eMessage); };
     void onModelClearError(OptionErrorCode clearedError) { clearModelError(clearedError); };
+    void highlightOverwriteCB(bool highlight)
+    {
+        overwriteCheckBox->setStyleSheet(
+            highlight? "background-color: yellow;" : "background-color: none;");
+    }
 
 signals:
     void sourceDirectoryLEChanged(QString newSrcDir);
@@ -45,7 +50,6 @@ signals:
     void optionsMaxHeightLEChanged(QString maxHeightQS);
     void optionsScaleFactorLEChanged(QString scaleFactorQS);
     void validateOptionsDialog();
-    void optionsGoodFindFiles();
 
 private slots:
     void onAccept();

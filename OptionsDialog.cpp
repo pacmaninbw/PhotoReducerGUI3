@@ -230,18 +230,14 @@ void OptionsDialog::handelModelError(const OptionErrorSignalContents &eMessage)
 {
     OptionErrorCode eCode = eMessage.errorCode;
     modelHasErrors |= eCode;
-
     widgetHighlightError(eCode, true);
-
     showErrorDisableOKButton(eMessage.errorMessage);
 }
 
 void OptionsDialog::clearModelError(const OptionErrorCode clearedError)
 {
     modelHasErrors &= ~clearedError;
-
-    widgetHighlightError(clearedError, false);
-
+    widgetHighlightError(clearedError, false);    
     if (!modelHasErrors)
     {
         optionsButtonBox->button(QDialogButtonBox::Ok)->setEnabled(true);

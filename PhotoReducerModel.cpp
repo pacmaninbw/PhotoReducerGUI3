@@ -185,6 +185,11 @@ void PhotoReducerModel::initializeOptionsDialog()
     modelValues.scaleFactor = scaleFactor;
 
     emit initOptionsValues(modelValues);
+
+    if (!overWriteFiles && attemptedOverwrites)
+    {
+        emit highlightOverWriteCB(true);
+    }
 }
 
 void PhotoReducerModel::resizeAllPhotos()
@@ -260,10 +265,6 @@ void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
 /*
  * Model Business Logic Implementation
  */
-void PhotoReducerModel::optionsGoodFindFiles()
-{
-    buildPhotoInputAndOutputList();
-}
 
 /*
  * The following code originated in the 2 previous versions of the Photo Reduction Tool
@@ -274,6 +275,7 @@ void PhotoReducerModel::optionsGoodFindFiles()
 void PhotoReducerModel::buildPhotoInputAndOutputList()
 {
     fs::path sourceDir = sourceDirectory;
+    attemptedOverwrites = 0;    // Clear any previous overwrite attempts
 
     InputPhotoList inputPhotoList = findAllPhotos(sourceDir);
     
