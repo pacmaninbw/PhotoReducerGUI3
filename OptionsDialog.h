@@ -76,7 +76,6 @@ private:
     void handleMaintainRatioError(bool isError);
     void handleMissingSizeError(bool isError);
     void connectDialogButtons();
-    void dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText);
     QLineEdit* createNumericLineEdit(const char* objectName);
     QLineEdit* createDirectoryLineEdit(const char* objectName);
 

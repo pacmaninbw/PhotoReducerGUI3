@@ -285,18 +285,6 @@ void OptionsDialog::handleMissingSizeError(bool isError)
     scaleFactorLineEdit->setStyleSheet(newStyle);
 }
 
-void OptionsDialog::dirBrowsePushButtonClicked(QLineEdit* dirLineEdit, const char* dirText)
-{
-    QString textToChange = dirLineEdit->text();
-    QString fileDialogTitle = dirText;
-    fileDialogTitle += " Directory";
-
-    textToChange = QFileDialog::getExistingDirectory(nullptr, fileDialogTitle,
-        textToChange, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-    dirLineEdit->setText(textToChange);
-}
-
 /*
  * Slots for the widgets.
  */
