@@ -16,17 +16,25 @@ public:
         setReadOnly(true);
     }
 
+    // The original version of this function caused an endless loop when loosing
+    // focus. This function has had help
+    // https://stackoverflow.com/questions/79428499/infinite-focus-loop-in-qt
     void focusInEvent(QFocusEvent *event)
     {
         if (event->reason() == Qt::MouseFocusReason ||
-            event->reason() == Qt::TabFocusReason)
+            event->reason() == Qt::TabFocusReason ||
+            event->reason() == Qt::BacktabFocusReason ||
+            event->reason() == Qt::ShortcutFocusReason)
         {
             QString textToChange = text();
     
             textToChange = QFileDialog::getExistingDirectory(nullptr, fileDialogTitle,
                 textToChange, QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
         
-            setText(textToChange);    
+            if (!textToChange.isEmpty())
+            {
+                setText(textToChange);    
+            }
         }
         QWidget::focusInEvent(event);
     }
