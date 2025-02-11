@@ -1,6 +1,6 @@
 #include "createNamedQTWidget.h"
+#include "DirectoryLineEdit.h"
 #include "OptionsDialog.h"
-
 #include <QVariant>
 #include <QAbstractButton>
 #include <QApplication>
@@ -11,7 +11,6 @@
 #include <QFileDialog>
 #include <QFormLayout>
 #include <QGroupBox>
-#include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -330,12 +329,3 @@ QLineEdit* OptionsDialog::createNumericLineEdit(const char *objectName)
     return numericLineEdit;
 }
 
-QLineEdit* OptionsDialog::createDirectoryLineEdit(const char *objectName)
-{
-    QLineEdit* directoryLineEdit = createNamedQTWidget<QLineEdit>(objectName, this);
-
-    directoryLineEdit->setReadOnly(true);
-    directoryLineEdit->setStyleSheet(directoryLEStyle);
-
-    return directoryLineEdit;
-}

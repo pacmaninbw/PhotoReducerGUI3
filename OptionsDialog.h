@@ -14,7 +14,6 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QLineEdit>
-#include <QPushButton>
 #include <QString>
 #include <QVBoxLayout>
 
@@ -77,7 +76,6 @@ private:
     void handleMissingSizeError(bool isError);
     void connectDialogButtons();
     QLineEdit* createNumericLineEdit(const char* objectName);
-    QLineEdit* createDirectoryLineEdit(const char* objectName);
 
     QGroupBox* fileAndDirectoryGroupBox;
     QCheckBox* JPGFileTypeCheckBox;
@@ -102,7 +100,6 @@ private:
     const int maxDigitsNumericLE = 5;
     const char* numericLEStyle = "width: 60px; background-color: white;";
     const char* numericLEStyleError = "width: 60px; background-color: yellow;";
-    const char* directoryLEStyle = "width: 400px;";
     const int directorLEWidth = 400;
 
     OptionErrorCode modelHasErrors = 0;
