@@ -123,8 +123,11 @@ QGroupBox* OptionsDialog::setUpFileGroupBox()
         "Overwrite Existing Files", "overwriteCheckBox", this);
     fileAndDirectorylayout->addRow(overwriteCheckBox);
     
-    fileAndDirectorylayout->addRow("Source Directory", layOutSourceDirectory());
-    fileAndDirectorylayout->addRow("Target Directory", layOutTargetDirectory());
+    sourceDirectoryLineEdit = new DirectoryLineEdit("sourceDirectoryLineEdit", "Source Directory", directorLEWidth, this);
+    fileAndDirectorylayout->addRow("Source Directory", sourceDirectoryLineEdit);
+
+    targetDirectoryLineEdit = new DirectoryLineEdit("targetDirectoryLineEdit", "Target Directory", directorLEWidth, this);
+    fileAndDirectorylayout->addRow("Target Directory", targetDirectoryLineEdit);
 
     addExtensionLineEdit = createNamedQTWidget<QLineEdit>("addExtensionLineEdit", this);
     addExtensionLineEdit->setStyleSheet("width: 200px;");
@@ -194,29 +197,6 @@ QFormLayout* OptionsDialog::createNamedFormLayoutWithPolicy(const char *formName
     newFormLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
 
     return newFormLayout;
-}
-
-QHBoxLayout *OptionsDialog::layOutSourceDirectory()
-{
-    QHBoxLayout *srcDirLayout = new QHBoxLayout;
-    srcDirLayout->setObjectName("srcDirLayout");
-
-    sourceDirectoryLineEdit = new DirectoryLineEdit("sourceDirectoryLineEdit", "Source Directory", directorLEWidth, this);
-    srcDirLayout->addWidget(sourceDirectoryLineEdit);
-
-    return srcDirLayout;
-}
-
-QHBoxLayout *OptionsDialog::layOutTargetDirectory()
-{
-    QHBoxLayout *targetDirLayout = new QHBoxLayout();
-    targetDirLayout->setObjectName("targetDirLayout");
-
-    targetDirectoryLineEdit = new DirectoryLineEdit("targetDirectoryLineEdit", "Target Directory", directorLEWidth, this);
-
-    targetDirLayout->addWidget(targetDirectoryLineEdit);
-
-    return targetDirLayout;
 }
 
 void OptionsDialog::handelModelError(const OptionErrorSignalContents &eMessage)

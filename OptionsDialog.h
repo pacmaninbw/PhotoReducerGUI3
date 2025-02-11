@@ -54,10 +54,8 @@ signals:
 
 private slots:
     void onAccept();
-    void on_sourceDirBrowsePushButton_clicked() { dirBrowsePushButtonClicked(sourceDirectoryLineEdit, "Source"); };
     void on_targetDirectoryLineEdit_textChanged() { emit targetDirectoryLEChanged(targetDirectoryLineEdit->text()); };
     void on_sourceDirectoryLineEdit_textChanged() { emit sourceDirectoryLEChanged(sourceDirectoryLineEdit->text()); };
-    void on_targetDirectoryBrowsePushButton_clicked() {dirBrowsePushButtonClicked(targetDirectoryLineEdit, "Target"); };
     void on_addExtensionLineEdit_editingFinished() { emit optionsaddExtensionLEChanged(addExtensionLineEdit->text()); };
     void on_maxWidthLineEdit_editingFinished() { emit optionsMaxWidthLEChanged(maxWidthLineEdit->text()); };
     void on_maxHeightLineEdit_editingFinished() { emit optionsMaxHeightLEChanged(maxHeightLineEdit->text()); };
@@ -71,8 +69,6 @@ private:
     QGroupBox* setUpPhotoOptionGroupBox();
     QDialogButtonBox* setrUpOptionsButtonBox();
     QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);    
-    QHBoxLayout* layOutSourceDirectory();
-    QHBoxLayout* layOutTargetDirectory();
     void handelModelError(const OptionErrorSignalContents &eMessage);
     void clearModelError(const OptionErrorCode clearedError);
     void showErrorDisableOKButton(QString error);

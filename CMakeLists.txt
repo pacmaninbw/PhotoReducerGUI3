@@ -18,7 +18,6 @@ find_package(OpenCV REQUIRED)
 set(PROJECT_SOURCES
         createNamedQTWidget.h
         DirectoryLineEdit.h
-        DirectoryLineEdit.cpp
         main.cpp
         mainwindow.cpp
         mainwindow.h
@@ -28,8 +27,8 @@ set(PROJECT_SOURCES
         OptionErrorCode.h
     	PhotoReducerModel.h
         PhotoReducerModel.cpp
-        SignalRouterController.cpp
         SignalRouterController.h
+        SignalRouterController.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
