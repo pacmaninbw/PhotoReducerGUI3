@@ -84,7 +84,10 @@ private:
     void setSourceDirectory(QString newSrcDir);
     void setTargetDirectory(QString newTargetDir);
     int qstringToInt(QString possibleNumber);
-    void sendErrorSignal(OptionErrorCode code, QString eMessage);
+    bool hasErrors() { return errorMask != 0; };
+    bool hasThisError(OptionErrorCode eCode) { return (errorMask & eCode) != 0; };
+    void setErrorSendErrorSignal(OptionErrorCode code, QString eMessage);
+    void clearError(OptionErrorCode code);
     bool checkMaintainRatioErrors();
     bool clearMaintainRatioErrorIfSet();
     void photoSizeValueError(OptionErrorCode code, QString dimension);
@@ -117,6 +120,7 @@ private:
     std::size_t resizedPhotosCount = 0;
     std::size_t photosToResizeCount = 0;
     PhotoFileList photoFileList;
+    OptionErrorCode errorMask = 0;
 /*
  * File Options.
  */

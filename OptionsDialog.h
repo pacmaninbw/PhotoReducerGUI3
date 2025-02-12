@@ -2,6 +2,7 @@
 #define OPTIONSDIALOG_H_
 
 #include "DirectoryLineEdit.h"
+#include "NumericLineEdit.h"
 #include "OptionErrorCode.h"
 #include "OptionsInitStruct.h"
 #include <QVariant>
@@ -56,9 +57,9 @@ private slots:
     void on_targetDirectoryLineEdit_textChanged() { emit targetDirectoryLEChanged(targetDirectoryLineEdit->text()); };
     void on_sourceDirectoryLineEdit_textChanged() { emit sourceDirectoryLEChanged(sourceDirectoryLineEdit->text()); };
     void on_addExtensionLineEdit_editingFinished() { emit optionsaddExtensionLEChanged(addExtensionLineEdit->text()); };
-    void on_maxWidthLineEdit_editingFinished() { emit optionsMaxWidthLEChanged(maxWidthLineEdit->text()); };
-    void on_maxHeightLineEdit_editingFinished() { emit optionsMaxHeightLEChanged(maxHeightLineEdit->text()); };
-    void on_scaleFactorLineEdit_editingFinished() { emit optionsScaleFactorLEChanged(scaleFactorLineEdit->text()); };
+    void on_maxWidthLineEdit_userEditComplete(QString newValue) { emit optionsMaxWidthLEChanged(newValue); };
+    void on_maxHeightLineEdit_userEditComplete(QString newValue) { emit optionsMaxHeightLEChanged(newValue); };
+    void on_scaleFactorLineEdit_userEditComplete(QString newValue) { emit optionsScaleFactorLEChanged(newValue); };
 
 private:
     void setUpOtionsDialogUI();
@@ -75,7 +76,6 @@ private:
     void handleMaintainRatioError(bool isError);
     void handleMissingSizeError(bool isError);
     void connectDialogButtons();
-    QLineEdit* createNumericLineEdit(const char* objectName);
 
     QGroupBox* fileAndDirectoryGroupBox;
     QCheckBox* JPGFileTypeCheckBox;
@@ -88,18 +88,15 @@ private:
     QGroupBox* photoOptionsBox;
     QCheckBox* maintainRatioCheckBox;
     QCheckBox* displayResizedCheckBox;
-    QLineEdit* maxWidthLineEdit;
-    QLineEdit* maxHeightLineEdit;
-    QLineEdit* scaleFactorLineEdit;
+    NumericLineEdit* maxWidthLineEdit;
+    NumericLineEdit* maxHeightLineEdit;
+    NumericLineEdit* scaleFactorLineEdit;
     QDialogButtonBox* optionsButtonBox;
     QFormLayout* photoOptionsLayout;
     QFormLayout* fileAndDirectorylayout;
     QVBoxLayout* optionsDialogLayout;
 
     const int groupBoxSpacing = 60;
-    const int maxDigitsNumericLE = 5;
-    const char* numericLEStyle = "width: 60px; background-color: white;";
-    const char* numericLEStyleError = "width: 60px; background-color: yellow;";
     const int directorLEWidth = 400;
 
     OptionErrorCode modelHasErrors = 0;

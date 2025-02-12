@@ -1,5 +1,6 @@
 #include "createNamedQTWidget.h"
 #include "DirectoryLineEdit.h"
+#include "NumericLineEdit.h"
 #include "OptionsDialog.h"
 #include <QVariant>
 #include <QAbstractButton>
@@ -75,13 +76,13 @@ QGroupBox* OptionsDialog::setUpPhotoOptionGroupBox()
         "Display Resized Photo", "displayResizedCheckBox", this);
     photoOptionsLayout->addRow(displayResizedCheckBox);
 
-    maxWidthLineEdit = createNumericLineEdit("maxWidthLineEdit");
+    maxWidthLineEdit = new NumericLineEdit("maxWidthLineEdit");
     photoOptionsLayout->addRow("Maximum Photo Width", maxWidthLineEdit);
 
-    maxHeightLineEdit = createNumericLineEdit("maxHeightLineEdit");
+    maxHeightLineEdit = new NumericLineEdit("maxHeightLineEdit");
     photoOptionsLayout->addRow("Maximum Photo Height", maxHeightLineEdit);
 
-    scaleFactorLineEdit = createNumericLineEdit("scaleFactorLineEdit");
+    scaleFactorLineEdit = new NumericLineEdit("scaleFactorLineEdit");
     photoOptionsLayout->addRow("Scale Factor", scaleFactorLineEdit);
 
     photoOptionsBox->setLayout(photoOptionsLayout);
@@ -227,7 +228,7 @@ void OptionsDialog::showErrorDisableOKButton(QString error)
 
 void OptionsDialog::widgetHighlightError(const OptionErrorCode error, bool highlight)
 {
-    QWidget* widgetToChange = nullptr;
+    NumericLineEdit* widgetToChange = nullptr;
 
     switch (error)
     {
@@ -235,8 +236,6 @@ void OptionsDialog::widgetHighlightError(const OptionErrorCode error, bool highl
             showErrorDisableOKButton("Unknown error code!");
             return;
         case maintainRatioError:
-        // The maintain ratio error indicates that both width and height have
-        // been specified which can cause ratio errors.
             handleMaintainRatioError(highlight);
             return;
         case missingSizeError:
@@ -255,21 +254,21 @@ void OptionsDialog::widgetHighlightError(const OptionErrorCode error, bool highl
 
     if (widgetToChange)
     {
-        widgetToChange->setStyleSheet(highlight? numericLEStyleError : numericLEStyle);
+        widgetToChange->highlightError(highlight);
     }
 }
 
 /*
  * Multiple widgets need to be changed.
+ * The maintain ratio error indicates that both width and height have
+ * been specified which can cause ratio errors.
  */
 void OptionsDialog::handleMaintainRatioError(bool isError)
 {
-    const char* newStyle = isError? numericLEStyleError : numericLEStyle;
-
     maintainRatioCheckBox->setStyleSheet(isError? "background-color: yellow;" :
         "background-color: none;");
-    maxWidthLineEdit->setStyleSheet(newStyle);
-    maxHeightLineEdit->setStyleSheet(newStyle);
+    maxWidthLineEdit->highlightError(isError);
+    maxHeightLineEdit->highlightError(isError);
 }
 
 /*
@@ -277,11 +276,9 @@ void OptionsDialog::handleMaintainRatioError(bool isError)
  */
 void OptionsDialog::handleMissingSizeError(bool isError)
 {
-    const char* newStyle = isError? numericLEStyleError : numericLEStyle;
-
-    maxWidthLineEdit->setStyleSheet(newStyle);
-    maxHeightLineEdit->setStyleSheet(newStyle);
-    scaleFactorLineEdit->setStyleSheet(newStyle);
+    maxWidthLineEdit->highlightError(isError);
+    maxHeightLineEdit->highlightError(isError);
+    scaleFactorLineEdit->highlightError(isError);
 }
 
 /*
@@ -317,15 +314,5 @@ void OptionsDialog::initOptionsValues(OptionsInitStruct modelValues)
         QString::number(modelValues.maxHeight) : QString("")));
     scaleFactorLineEdit->setText(((modelValues.maxWidth > 0)?
         QString::number(modelValues.scaleFactor) : QString("")));
-}
-
-QLineEdit* OptionsDialog::createNumericLineEdit(const char *objectName)
-{
-    QLineEdit* numericLineEdit = createNamedQTWidget<QLineEdit>(objectName, this);
-
-    numericLineEdit->setStyleSheet(numericLEStyle);
-    numericLineEdit->setMaxLength(maxDigitsNumericLE);
-
-    return numericLineEdit;
 }
 

@@ -25,6 +25,7 @@ set(PROJECT_SOURCES
         OptionsDialog.h
         OptionsInitStruct.h
         OptionErrorCode.h
+        NumericLineEdit.h
     	PhotoReducerModel.h
         PhotoReducerModel.cpp
         SignalRouterController.h

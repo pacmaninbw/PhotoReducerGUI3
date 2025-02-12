@@ -84,25 +84,36 @@ int PhotoReducerModel::qstringToInt(QString possibleNumber)
     return output;
 }
 
-void PhotoReducerModel::sendErrorSignal(OptionErrorCode code, QString eMessage)
+void PhotoReducerModel::setErrorSendErrorSignal(OptionErrorCode code, QString eMessage)
 {
+    errorMask |= code;
+
     OptionErrorSignalContents eSignalContents;
-    eSignalContents.errorCode = maintainRatioError;
+    eSignalContents.errorCode = code;
     eSignalContents.errorMessage = eMessage;
     emit modelErrorSignal(eSignalContents);
+}
+
+void PhotoReducerModel::clearError(OptionErrorCode code)
+{
+    if (hasThisError(code))
+    {
+        errorMask &= ~code;
+        emit modelClearError(code);
+    }
 }
 
 bool PhotoReducerModel::checkMaintainRatioErrors()
 {
     if (maintainRatio && maxWidth && maxHeight)
     {
-        sendErrorSignal(maintainRatioError, "To maintain the ratio of the picture, "
+        setErrorSendErrorSignal(maintainRatioError, "To maintain the ratio of the picture, "
             "only one of Max Width or Max Height may be specified!");
         return true;
     }
     else
     {
-        emit modelClearError(maintainRatioError);
+        clearError(maintainRatioError);
     }
 
     return false;
@@ -110,9 +121,9 @@ bool PhotoReducerModel::checkMaintainRatioErrors()
 
 bool PhotoReducerModel::clearMaintainRatioErrorIfSet()
 {
-    if (maintainRatio && maxWidth && maxHeight)
+    if (hasThisError(maintainRatioError))
     {
-        emit modelClearError(maintainRatioError);
+        clearError(maintainRatioError);
         return true;
     }
 
@@ -122,7 +133,7 @@ bool PhotoReducerModel::clearMaintainRatioErrorIfSet()
 void PhotoReducerModel::photoSizeValueError(OptionErrorCode code, QString dimension)
 {
     QString errorText = "Max " + dimension + " must be an integer value greater than zero!";
-    sendErrorSignal(code, errorText);
+    setErrorSendErrorSignal(code, errorText);
 }
 
 std::size_t PhotoReducerModel::processPhotoDimension(QString value, QString dimension, OptionErrorCode code)
@@ -141,7 +152,7 @@ std::size_t PhotoReducerModel::processPhotoDimension(QString value, QString dime
         {
             if (!checkMaintainRatioErrors())
             {
-                emit modelClearError(code);
+                clearError(code);
             }
         }
         else
@@ -150,8 +161,8 @@ std::size_t PhotoReducerModel::processPhotoDimension(QString value, QString dime
             if (!(newValue == 0 && clearMaintainRatioErrorIfSet()))
             {
                 photoSizeValueError(code, dimension);
+                newValue = 0;
             }
-            newValue = 0;
         }
     }
 
@@ -201,7 +212,7 @@ void PhotoReducerModel::validateOptionsDialog()
 {
     if (!maxWidth && !maxHeight && !scaleFactor)
     {
-        sendErrorSignal(missingSizeError, "Please provide a new size for the photo!");
+        setErrorSendErrorSignal(missingSizeError, "Please provide a new size for the photo!");
     }
     else if (!checkMaintainRatioErrors())
     {
@@ -250,14 +261,14 @@ void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
         if (testscaleFactor >= minScaleFactor && testscaleFactor <= maxScaleFactor)
         {
             scaleFactor = testscaleFactor;
-            emit modelClearError(scaleFactorError);
+            clearError(scaleFactorError);
         }
         else
         {
             QString eText = "Scale Factor must be an integer value between " + 
                 QString::number(minScaleFactor) + " and " +
                 QString::number(minScaleFactor);
-            sendErrorSignal(scaleFactorError, eText);
+            setErrorSendErrorSignal(scaleFactorError, eText);
         }
     }
 }
