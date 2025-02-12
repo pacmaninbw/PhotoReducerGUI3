@@ -1,5 +1,5 @@
-#ifndef NUMERIClINEeDIT_h_
-#define NUMERIClINEeDIT_h_
+#ifndef NUMERICLINEDIT_H_
+#define NUMERICLINEDIT_H_
 
 #include <QLineEdit>
 #include <QFileDialog>
@@ -17,7 +17,7 @@ public:
     }
 
 /*
- * Do to how message boxes change the focus when reporting error conditions
+ * Due to how message boxes change the focus when reporting error conditions,
  * how the line edit gains and loses focus is important. Multiple signals
  * for editing were being reported when the user didn't edit.
  */
@@ -66,6 +66,6 @@ private:
 
 };
 
-#endif // NUMERIClINEeDIT_h_
+#endif // NUMERICLINEDIT_H_
 
 
