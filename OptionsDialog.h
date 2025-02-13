@@ -67,7 +67,7 @@ private:
     void connectFileGroupCheckBoxes();
     void connectPhotoGroupCheckBoxes();
     QGroupBox* setUpPhotoOptionGroupBox();
-    QDialogButtonBox* setrUpOptionsButtonBox();
+    QDialogButtonBox* setUpOptionsButtonBox();
     QFormLayout* createNamedFormLayoutWithPolicy(const char *formName);    
     void handelModelError(const OptionErrorSignalContents &eMessage);
     void clearModelError(const OptionErrorCode clearedError);

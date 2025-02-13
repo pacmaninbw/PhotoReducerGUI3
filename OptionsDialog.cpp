@@ -48,7 +48,7 @@ void OptionsDialog::setUpOtionsDialogUI()
     optionsDialogLayout->addWidget(setUpFileGroupBox(), 0, Qt::AlignHCenter);
     optionsDialogLayout->addWidget(setUpPhotoOptionGroupBox(), 0, Qt::AlignHCenter);
 
-    optionsButtonBox = setrUpOptionsButtonBox();
+    optionsButtonBox = setUpOptionsButtonBox();
     optionsDialogLayout->addWidget(optionsButtonBox, 0, Qt::AlignHCenter);
 
     optionsDialogLayout->setSpacing(groupBoxSpacing);
@@ -90,7 +90,7 @@ QGroupBox* OptionsDialog::setUpPhotoOptionGroupBox()
     return photoOptionsBox;
 }
 
-QDialogButtonBox *OptionsDialog::setrUpOptionsButtonBox()
+QDialogButtonBox *OptionsDialog::setUpOptionsButtonBox()
 {
     QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
 
