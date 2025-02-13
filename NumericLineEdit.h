@@ -2,7 +2,6 @@
 #define NUMERICLINEDIT_H_
 
 #include <QLineEdit>
-#include <QFileDialog>
 #include <QFocusEvent>
 class NumericLineEdit : public QLineEdit {
     Q_OBJECT
