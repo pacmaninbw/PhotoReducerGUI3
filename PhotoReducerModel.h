@@ -83,15 +83,20 @@ private:
     void setPhotosToResizeCount(std::size_t newValue);
     void setSourceDirectory(QString newSrcDir);
     void setTargetDirectory(QString newTargetDir);
+
+    // Processing and error checking
     int qstringToInt(QString possibleNumber);
+    bool hasPhotoSize() { return maxWidth || maxHeight || scaleFactor; };
     bool hasErrors() { return errorMask != 0; };
     bool hasThisError(OptionErrorCode eCode) { return (errorMask & eCode) != 0; };
     void setErrorSendErrorSignal(OptionErrorCode code, QString eMessage);
     void clearError(OptionErrorCode code);
     bool checkMaintainRatioErrors();
     bool clearMaintainRatioErrorIfSet();
+    void clearMissingSizeErrorIfSet(std::size_t newSize);
     void photoSizeValueError(OptionErrorCode code, QString dimension);
     std::size_t processPhotoDimension(QString value, QString dimension, OptionErrorCode code);
+    void reportAnyAttemptedOverwrites();
 
     // Get all the photo files in the source directory the user specified.
     // Apply any name changes to the outout files.

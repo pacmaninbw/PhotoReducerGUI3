@@ -113,7 +113,7 @@ bool PhotoReducerModel::checkMaintainRatioErrors()
     }
     else
     {
-        clearError(maintainRatioError);
+        clearMaintainRatioErrorIfSet();
     }
 
     return false;
@@ -128,6 +128,14 @@ bool PhotoReducerModel::clearMaintainRatioErrorIfSet()
     }
 
     return false;
+}
+
+void PhotoReducerModel::clearMissingSizeErrorIfSet(std::size_t newSize)
+{
+    if (newSize > 0 && hasThisError(missingSizeError))
+    {
+        clearError(missingSizeError);
+    }
 }
 
 void PhotoReducerModel::photoSizeValueError(OptionErrorCode code, QString dimension)
@@ -157,7 +165,7 @@ std::size_t PhotoReducerModel::processPhotoDimension(QString value, QString dime
         }
         else
         {
-            // if value was previously set and this is correcting an error
+            // if value was not previously set and this is correcting an error
             if (!(newValue == 0 && clearMaintainRatioErrorIfSet()))
             {
                 photoSizeValueError(code, dimension);
@@ -167,6 +175,20 @@ std::size_t PhotoReducerModel::processPhotoDimension(QString value, QString dime
     }
 
     return static_cast<std::size_t>(newValue);
+}
+
+void PhotoReducerModel::reportAnyAttemptedOverwrites()
+{
+    if (attemptedOverwrites)
+    {
+        QString overwriteMsg = QString::number(attemptedOverwrites);
+        overwriteMsg += " photos will not be resized because existing files "
+            "would be overwritten. To overwrite these files open the options"
+            " dialog and click the Overwrite checkbox";
+        QMessageBox warningMessageBox;
+        warningMessageBox.warning(0,"Warning:", overwriteMsg);
+        warningMessageBox.setFixedSize(500,200);
+    }
 }
 
 /*
@@ -210,23 +232,14 @@ void PhotoReducerModel::resizeAllPhotos()
 
 void PhotoReducerModel::validateOptionsDialog()
 {
-    if (!maxWidth && !maxHeight && !scaleFactor)
+    if (!hasPhotoSize())
     {
         setErrorSendErrorSignal(missingSizeError, "Please provide a new size for the photo!");
     }
     else if (!checkMaintainRatioErrors())
     {
         buildPhotoInputAndOutputList();
-        if (attemptedOverwrites)
-        {
-            QString overwriteMsg = QString::number(attemptedOverwrites);
-            overwriteMsg += " photos will not be resized because existing files "
-            "would be overwritten. To overwrite these files open the options"
-            " dialog and click the Overwrite checkbox";
-            QMessageBox warningMessageBox;
-            warningMessageBox.warning(0,"Warning:", overwriteMsg);
-            warningMessageBox.setFixedSize(500,200);
-        }
+        reportAnyAttemptedOverwrites();
         emit acceptOptionsDialog();
     }
 }
@@ -245,12 +258,14 @@ void PhotoReducerModel::optionsMaxWidthChanged(QString maxWidthQS)
 {
     maxWidth = processPhotoDimension(maxWidthQS, "Width", maxWidthError);
     checkMaintainRatioErrors();
+    clearMissingSizeErrorIfSet(maxWidth);
 }
 
 void PhotoReducerModel::optionsMaxHeightChanged(QString maxHeightQS)
 {
     maxHeight = processPhotoDimension(maxHeightQS, "Height", maxHeightError);
     checkMaintainRatioErrors();
+    clearMissingSizeErrorIfSet(maxHeight);
 }
 
 void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
@@ -262,6 +277,7 @@ void PhotoReducerModel::optionsScaleFactorChanged(QString scaleFactorQS)
         {
             scaleFactor = testscaleFactor;
             clearError(scaleFactorError);
+            clearMissingSizeErrorIfSet(scaleFactorError);
         }
         else
         {
