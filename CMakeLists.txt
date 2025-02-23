@@ -16,8 +16,8 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 find_package(OpenCV REQUIRED)
 
 set(PROJECT_SOURCES
-        createNamedQTWidget.h
-        DirectoryLineEdit.h
+        include/createNamedQTWidget.h
+        include/DirectoryLineEdit.h
         main.cpp
         mainwindow.cpp
         mainwindow.h
@@ -25,7 +25,7 @@ set(PROJECT_SOURCES
         OptionsDialog.h
         OptionsInitStruct.h
         OptionErrorCode.h
-        NumericLineEdit.h
+        include/NumericLineEdit.h
     	PhotoReducerModel.h
         PhotoReducerModel.cpp
         SignalRouterController.h
@@ -56,6 +56,8 @@ else()
 endif()
 
 target_link_libraries(PhotoReducerGUI3 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS})
+target_include_directories(PhotoReducerGUI3 PRIVATE ./include)
+
 
 set_target_properties(PhotoReducerGUI3 PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
