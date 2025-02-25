@@ -17,7 +17,6 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-
 class MainWindow : public QMainWindow
 {
     Q_OBJECT

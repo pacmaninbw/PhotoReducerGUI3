@@ -1,6 +1,7 @@
 #include "createNamedQTWidget.h"
 #include "mainwindow.h"
 #include <QMessageBox>
+#include <QString>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
         PhotoReducerModel.cpp
         SignalRouterController.h
         SignalRouterController.cpp
+        UserModeStyleSheetGenerator.h
+        UserModeStyleSheetGenerator.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -56,7 +58,7 @@ else()
 endif()
 
 target_link_libraries(PhotoReducerGUI3 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS})
-target_include_directories(PhotoReducerGUI3 PRIVATE ./include)
+target_include_directories(PhotoReducerGUI3 PRIVATE include)
 
 
 set_target_properties(PhotoReducerGUI3 PROPERTIES
